@@ -34,7 +34,7 @@ type Props = {
 };
 
 export function DocumentRow({ doc, role }: Props) {
-  const { visible, total, redacted } = documentAccessSummary(doc, role);
+  const { visible, total } = documentAccessSummary(doc, role);
   const accessState = documentAccessState(doc, role);
   const fullyRedacted = visible === 0 && total > 0;
   const previewReason = firstRedactionReason(doc, role);
@@ -96,9 +96,6 @@ export function DocumentRow({ doc, role }: Props) {
           </span>
           <span className="font-mono tabular-nums text-slate-400">
             {visible}/{total}
-            {redacted > 0 ? (
-              <span className="ml-1 text-amber-400">-{redacted}</span>
-            ) : null}
           </span>
         </span>
         <ArrowUpRight className="h-4 w-4 text-slate-600 group-hover:text-slate-300 transition-colors" />

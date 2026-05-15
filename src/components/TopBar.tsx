@@ -23,7 +23,7 @@ export function TopBar() {
                 Acephalt Diligence Workspace
               </div>
               <div className="text-[10px] uppercase tracking-[0.18em] text-slate-500">
-                Project Cedar / trust-boundary enforcement for V3 deal rooms
+                Concept demo / one deal, three roles, field-level access
               </div>
             </div>
           </Link>

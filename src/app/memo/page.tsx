@@ -45,24 +45,27 @@ export default function MemoDraftPage() {
     <div className="mx-auto max-w-[1100px] px-4 py-6 sm:px-6 lg:px-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] text-slate-500">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1 text-[11px] uppercase tracking-[0.18em] text-slate-500 transition-colors hover:text-slate-300"
+          >
             <Scale className="h-3.5 w-3.5" />
             Data room
             <ChevronRight className="h-3.5 w-3.5" />
             Memo draft
-          </div>
+          </Link>
           <h1 className="mt-2 text-2xl font-semibold tracking-tight text-slate-50">
-            Source-traced diligence memo
+            Memo draft for this room
           </h1>
           <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-400">
-            This route shows how the same room evidence hardens into memo language,
-            and how that language changes when the supporting fields are hidden,
-            conflicted, or role-gated.
+            Each line below is a sentence a memo writer would put in front of an IC.
+            The room evidence under it changes for each role, so the sentence has to
+            change too.
           </p>
         </div>
         <div className="flex items-center gap-2">
           <Badge tone={affectedCount === 0 ? "success" : "warning"}>
-            {affectedCount} claim{affectedCount === 1 ? "" : "s"} affected by current role
+            {affectedCount} claim{affectedCount === 1 ? "" : "s"} affected
           </Badge>
           <Badge tone="info">{roleConfig.label}</Badge>
         </div>
@@ -84,12 +87,11 @@ export default function MemoDraftPage() {
           />
           <div className="space-y-1">
             <div className="text-xs uppercase tracking-wider text-slate-500">
-              Decision posture
+              What this role can say
             </div>
             <p className="max-w-3xl text-sm leading-relaxed text-slate-300">
-              The room shows what this role can inspect. The memo draft shows what
-              this role can responsibly assert after those visibility boundaries
-              change the evidence set.
+              The room decides what {roleConfig.label.toLowerCase()} can see. The memo decides
+              what they can responsibly write down once those fields are gated.
             </p>
           </div>
         </div>
@@ -194,7 +196,7 @@ export default function MemoDraftPage() {
 
           <div className="border-b border-slate-800 px-5 py-4 sm:px-6">
             <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
-              Resolver action
+              Action
             </div>
             <div className="mt-3 flex flex-wrap gap-2">
               {(["keep", "rewrite", "escalate"] as const).map((action) => (
@@ -222,18 +224,18 @@ export default function MemoDraftPage() {
 
           <div className="px-5 py-4 sm:px-6">
             <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
-              Memo delta
+              Outcome
             </div>
             <div className="mt-3 rounded-lg border border-slate-800 bg-slate-900/40 p-4">
               <div className="text-[11px] uppercase tracking-[0.16em] text-slate-500">
-                Draft line
+                Draft sentence
               </div>
               <p className="mt-2 text-sm leading-relaxed text-slate-100">
                 {selectedClaim.draft}
               </p>
               <div className="mt-4 border-t border-slate-800 pt-4">
                 <div className="text-[11px] uppercase tracking-[0.16em] text-slate-500">
-                  Current role outcome
+                  For {roleConfig.label.toLowerCase()}
                 </div>
                 <p className="mt-2 text-sm leading-relaxed text-slate-300">
                   {selectedClaim.resolverCopy[selectedClaim.status]}

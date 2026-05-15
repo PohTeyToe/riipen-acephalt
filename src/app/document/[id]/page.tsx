@@ -46,7 +46,6 @@ export default function DocumentDetailPage() {
     eventLog,
     appendTraceBatch,
     setLastViewedDocId,
-    lastViewedAt,
     lastViewedEventId,
     lastRoleChangeAt,
     lastRoleChangeEventId,
@@ -100,10 +99,6 @@ export default function DocumentDetailPage() {
         .slice(-10)
         .reverse(),
     [doc.id, eventLog, lastRoleChangeAt, lastRoleChangeEventId],
-  );
-  const latestDocumentOpen = React.useMemo(
-    () => traceRows.find((row) => row.action === "document.opened") ?? null,
-    [traceRows],
   );
   const latestTraceEvent = traceRows[0] ?? null;
   const fieldStamps = React.useMemo(() => {
@@ -230,14 +225,14 @@ export default function DocumentDetailPage() {
           <div className="flex items-center gap-2">
             <Lock className="h-3.5 w-3.5 text-amber-300" />
             <span className="font-medium uppercase tracking-wider text-amber-200">
-              Compliance review session
+              Compliance session
             </span>
           </div>
           <span className="text-amber-200/80">
-            Every field decision below is stamped from the current prototype session trace.
+            Full access. Every field you open is stamped and logged.
           </span>
           <span className="ml-auto font-mono text-[10px] uppercase tracking-wider text-amber-300/70">
-            Watermark active
+            Watermark on
           </span>
         </div>
       ) : null}
@@ -254,94 +249,51 @@ export default function DocumentDetailPage() {
         ))}
       </section>
 
-      <div className="mt-8 rounded-lg border border-slate-800 bg-slate-950/40 p-4 sm:p-5">
-        <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
-          Access trace
-        </div>
-        <dl className="mt-3 grid gap-y-2 text-sm sm:grid-cols-[170px_minmax(0,1fr)]">
-          <dt className="font-mono text-xs uppercase tracking-[0.16em] text-slate-500">
-            Enforcement
-          </dt>
-          <dd className="text-slate-300">
-            Current-session field decisions are stamped here; production enforcement would sit behind the room boundary.
-          </dd>
-          <dt className="font-mono text-xs uppercase tracking-[0.16em] text-slate-500">
-            Prototype boundary
-          </dt>
-          <dd className="text-slate-300">
-            This build keeps the policy model legible in the UI. A real room would move the same rule registry and trace schema to the server or database layer.
-          </dd>
-          <dt className="font-mono text-xs uppercase tracking-[0.16em] text-slate-500">
-            Policy source
-          </dt>
-          <dd className="font-mono text-xs text-slate-400">
-            policy registry / {policyVersion}
-          </dd>
-          <dt className="font-mono text-xs uppercase tracking-[0.16em] text-slate-500">
-            Role effect
-          </dt>
-          <dd className="text-slate-300">
-            {visibleCount} visible, {redactedCount} withheld for {roleConfig.label}.
-          </dd>
-          <dt className="font-mono text-xs uppercase tracking-[0.16em] text-slate-500">
-            Last document open
-          </dt>
-          <dd className="font-mono text-xs text-slate-400">
-            {latestDocumentOpen?.eventId ?? lastViewedEventId ?? "No document open stamped yet"}
-          </dd>
-          <dt className="font-mono text-xs uppercase tracking-[0.16em] text-slate-500">
-            Latest trace event
-          </dt>
-          <dd className="font-mono text-xs text-slate-400">
-            {latestTraceEvent?.eventId ?? "No trace stamped yet"}
-          </dd>
-          <dt className="font-mono text-xs uppercase tracking-[0.16em] text-slate-500">
-            Viewed at
-          </dt>
-          <dd className="font-mono text-xs text-slate-400">
-            {lastViewedAt ?? "No document viewed in this session"}
-          </dd>
-        </dl>
-        <div className="mt-4 border-t border-slate-800 pt-4">
-          <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
-            Rules in play
+      <div className="mt-8 overflow-hidden rounded-lg border-l-2 border-slate-700 bg-slate-950/40">
+        <div className="border-b border-slate-800 px-4 py-3 sm:px-5">
+          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
+            <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">
+              Access log
+            </div>
+            <div className="font-mono text-[11px] text-slate-500">
+              policy {policyVersion} / {visibleCount} visible / {redactedCount} withheld
+            </div>
           </div>
-          <div className="mt-3 space-y-2">
+        </div>
+
+        <div className="border-b border-slate-800 px-4 py-3 sm:px-5">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+            Rules applied
+          </div>
+          <div className="mt-2 space-y-1.5 font-mono text-[11px] text-slate-300">
             {rulesInPlay.map((rule) => (
-              <div
-                key={rule.id}
-                className="rounded-sm border border-slate-800 bg-slate-950/70 px-3 py-2"
-              >
-                <div className="font-mono text-[11px] text-slate-300">{rule.id}</div>
-                <div className="mt-1 text-xs text-slate-400">
-                  {rule.label}. {rule.rationale}
-                </div>
+              <div key={rule.id} className="flex flex-wrap items-baseline gap-x-2">
+                <span className="text-slate-200">{rule.id}</span>
+                <span className="text-slate-500">{rule.label}.</span>
+                <span className="text-slate-500">{rule.rationale}</span>
               </div>
             ))}
           </div>
         </div>
-        <div className="mt-4 border-t border-slate-800 pt-4">
-          <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
-            Session event trail
+
+        <div className="px-4 py-3 sm:px-5">
+          <div className="flex items-baseline justify-between gap-3">
+            <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+              Recent events
+            </div>
+            <div className="font-mono text-[10px] text-slate-500">
+              {latestTraceEvent?.eventId ?? "no events yet"}
+            </div>
           </div>
-          <div className="mt-3 space-y-2 font-mono text-[11px] text-slate-300">
-            {traceRows.map((row) => (
-              <div
-                key={row.eventId}
-                className="rounded-sm border border-slate-800 bg-slate-950/70 px-3 py-2"
-              >
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                  <span className="text-slate-500">{row.timestamp}</span>
-                  <span>{row.action}</span>
-                  <span className="text-slate-500">{row.eventId}</span>
-                  <span className="text-slate-500">
-                    target:{row.fieldId ?? row.docId ?? row.targetId}
-                  </span>
-                  <span className="text-slate-500">actor:{row.actor}</span>
-                </div>
-                <div className="mt-1 text-slate-500">
-                  {row.ruleId ?? "session.trace"} / {row.reason ?? "session event"}
-                </div>
+          <div className="mt-2 space-y-1 font-mono text-[11px] leading-relaxed text-slate-400">
+            {traceRows.slice(0, 8).map((row) => (
+              <div key={row.eventId} className="flex flex-wrap items-baseline gap-x-2">
+                <span className="text-slate-600">{row.timestamp}</span>
+                <span className="text-slate-200">{row.action}</span>
+                <span className="text-slate-500">
+                  {row.fieldId ?? row.docId ?? row.targetId}
+                </span>
+                <span className="text-slate-600">{row.ruleId ?? "session.trace"}</span>
               </div>
             ))}
           </div>

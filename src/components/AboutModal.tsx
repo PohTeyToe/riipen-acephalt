@@ -22,17 +22,17 @@ export function AboutModal() {
         <DialogHeader>
           <DialogTitle>About this concept</DialogTitle>
           <DialogDescription>
-            Concept-level mock built solo as a Riipen application artifact. Mock deal,
-            mock parties, mock documents. Project Cedar is invented. Not derived from
-            any internal source. Not affiliated with Acephalt. Visual styling is
-            generic-fintech-shaped, not a clone of their product.
+            Scoped prototype built as a Riipen proof-of-work artifact. Project Cedar,
+            the deal data, and all parties are invented. The prototype demonstrates
+            policy outcomes in a diligence room. It does not rely on internal Acephalt
+            data or imply affiliation.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-3 text-sm text-slate-300 leading-relaxed">
           <p>
-            The point of the mock is to argue for one specific scoping choice: a
-            role-aware diligence workspace with field-level redaction, instead of a
-            broader AI-for-data-rooms copilot.
+            The point is one narrow product argument: a diligence workspace becomes
+            more trustworthy when access policy is visible at the field level instead
+            of being hidden behind broad room permissions.
           </p>
           <p>
             Three roles see the same data room differently. An investor analyst
@@ -41,9 +41,9 @@ export function AboutModal() {
             sees only top-level deal terms and clauses tied to their party.
           </p>
           <p className="text-slate-400">
-            Built in Next.js, TypeScript, Tailwind. No backend. Mock data lives in a
-            single TypeScript file. The redaction engine is a pure function over the
-            current role and the field-level visibility list.
+            In production, policy would be enforced server-side and written to a real
+            audit log. This prototype visualizes those outcomes with seeded data and a
+            deterministic policy engine.
           </p>
         </div>
       </DialogContent>

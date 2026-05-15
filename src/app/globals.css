@@ -4,6 +4,11 @@
   --background: #060912;
   --foreground: #e5edf6;
   --grid: rgba(148, 163, 184, 0.06);
+  /* Role accent tokens. Used to color-key the trust posture per role
+     without changing the underlying slate-based surface palette. */
+  --role-investor: #60a5fa;
+  --role-compliance: #f59e0b;
+  --role-counterparty: #94a3b8;
 }
 
 @theme inline {
@@ -108,4 +113,34 @@ body {
 ::selection {
   background: rgba(59, 130, 246, 0.35);
   color: #f8fafc;
+}
+
+/* Diagonal hatch used behind redacted-field placeholders. Reads as a deliberate
+   "not for this role" surface rather than empty content. */
+.redaction-hatch {
+  background-image:
+    repeating-linear-gradient(
+      135deg,
+      rgba(148, 163, 184, 0.08) 0,
+      rgba(148, 163, 184, 0.08) 6px,
+      transparent 6px,
+      transparent 12px
+    );
+}
+
+/* Tiled "compliance review" watermark. Higher visibility than a single rotated
+   span: the same string repeats across the surface so the audit cost of full
+   access is legible at any field size. */
+.compliance-watermark {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='340' height='120' viewBox='0 0 340 120'><g transform='rotate(-18 170 60)' fill='none' stroke='rgb(251 191 36 / 0.32)' stroke-width='0.5'><text x='30' y='40' font-family='ui-sans-serif,system-ui,sans-serif' font-size='22' font-weight='900' letter-spacing='3' fill='rgb(251 191 36 / 0.28)'>COMPLIANCE REVIEW</text><text x='10' y='100' font-family='ui-monospace,monospace' font-size='10' letter-spacing='2' fill='rgb(251 191 36 / 0.2)'>AUDIT LOGGED - FIELD ACCESS STAMPED</text></g></svg>");
+  background-repeat: repeat;
+  background-size: 340px 120px;
+}
+
+.role-dot {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.9), 0 0 10px currentColor;
 }

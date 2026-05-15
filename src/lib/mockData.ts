@@ -35,7 +35,7 @@ export const PROJECT_CEDAR: Deal = {
   id: "cedar-2026-q3",
   codename: "Project Cedar",
   borrower: "Larkspur Software Holdings, Inc.",
-  borrowerSector: "Vertical SaaS:field service management",
+  borrowerSector: "Vertical SaaS for field service operators",
   vintage: "2026 Q3",
   size: "USD 42,000,000",
   facility: "Senior Secured Term Loan, 5-year, SOFR + 6.50%",
@@ -45,7 +45,7 @@ export const PROJECT_CEDAR: Deal = {
   documents: [
     {
       id: "term-sheet",
-      title: "Term Sheet:Project Cedar",
+      title: "Term Sheet · Project Cedar",
       type: "term_sheet",
       date: "2026-07-22",
       sourceParty: "Northbank Credit Partners",
@@ -103,13 +103,13 @@ export const PROJECT_CEDAR: Deal = {
             "Northbank credit committee discussed a SOFR + 7.00% open at the September 4 IC meeting. Pricing tightened on the second draft after the sponsor flagged a competing term sheet from a direct lender. The stretch-case scenario assumes a 50bps tightening at syndication.",
           visibleTo: ["investor_analyst", "compliance_reviewer"],
           redactionReason:
-            "Lead arranger internal pricing memo:not shareable with counterparties.",
+            "Lead arranger internal pricing memo. Not shareable with counterparties.",
         },
       ],
     },
     {
       id: "pitch-deck",
-      title: "Borrower Pitch Deck:Larkspur Software",
+      title: "Borrower Pitch Deck · Larkspur Software",
       type: "pitch_deck",
       date: "2026-06-30",
       sourceParty: "Larkspur Software Holdings, Inc.",
@@ -141,7 +141,7 @@ export const PROJECT_CEDAR: Deal = {
           ],
           visibleTo: ["investor_analyst", "compliance_reviewer"],
           redactionReason:
-            "Operating metrics shared with prospective lenders only. Counterparty access is limited to top-level deal terms.",
+            "Lender-side model inputs. Counterparty access to ARR, NRR, and margin would expose the sponsor's negotiating range before syndication closes.",
         },
         {
           id: "growth-plan",
@@ -150,13 +150,13 @@ export const PROJECT_CEDAR: Deal = {
             "Borrower plans to reach USD 68M ARR by FYE 2029 via product-led expansion in adjacent trades, a tuck-in of a regional dispatch vendor (target included in use-of-proceeds), and a price-increase program targeting customers below the median ARPU.",
           visibleTo: ["investor_analyst", "compliance_reviewer"],
           redactionReason:
-            "Forward-looking commercial plan. Restricted to lender-side reviewers.",
+            "Forward plan used for lender underwriting. Counterparty access would leak the expansion case before final paper is signed.",
         },
       ],
     },
     {
       id: "financials",
-      title: "Borrower Financials:3-year audited",
+      title: "Borrower Financials · 3-year audited",
       type: "financials",
       date: "2026-06-15",
       sourceParty: "Larkspur Software Holdings, Inc.",
@@ -175,7 +175,7 @@ export const PROJECT_CEDAR: Deal = {
           ],
           visibleTo: ["investor_analyst", "compliance_reviewer"],
           redactionReason:
-            "Borrower financial detail. Not shareable with external counterparties.",
+            "Underwriting support for lender-side reviewers. Counterparty access is limited to the negotiated deal package, not the borrower model.",
         },
         {
           id: "ebitda",
@@ -188,7 +188,7 @@ export const PROJECT_CEDAR: Deal = {
           ],
           visibleTo: ["investor_analyst", "compliance_reviewer"],
           redactionReason:
-            "Borrower financial detail. Not shareable with external counterparties.",
+            "Internal lender view of earnings quality. Counterparty access would expose the adjustment logic behind pricing and leverage.",
         },
         {
           id: "balance-sheet",
@@ -201,7 +201,7 @@ export const PROJECT_CEDAR: Deal = {
           ],
           visibleTo: ["investor_analyst", "compliance_reviewer"],
           redactionReason:
-            "Borrower financial detail. Not shareable with external counterparties.",
+            "Borrower balance-sheet detail used for lender diligence. Not part of the external counterparty packet.",
         },
         {
           id: "concentration",
@@ -210,13 +210,13 @@ export const PROJECT_CEDAR: Deal = {
             "Top 5 customers represent 9.4% of ARR. Top 25 customers represent 26.1% of ARR. No single customer exceeds 2.5% of ARR. Reviewer should reconcile against the customer ledger in Annex C of the auditor report.",
           visibleTo: ["investor_analyst", "compliance_reviewer"],
           redactionReason:
-            "Borrower commercial detail. Not shareable with external counterparties.",
+            "Borrower concentration detail shapes lender risk views. Counterparty access would reveal the customer book behind the credit case.",
         },
       ],
     },
     {
       id: "side-letter",
-      title: "Side Letter:Anchor Investor Co-Lender",
+      title: "Side Letter · Anchor Co-Lender",
       type: "side_letter",
       date: "2026-08-04",
       sourceParty: "Northbank Credit Partners / Cascade Pension Trust",
@@ -255,7 +255,7 @@ export const PROJECT_CEDAR: Deal = {
     },
     {
       id: "kyc-aml",
-      title: "KYC / AML Pack:Borrower Beneficial Owners",
+      title: "KYC / AML Pack · Borrower Beneficial Owners",
       type: "kyc_aml",
       date: "2026-07-08",
       sourceParty: "Larkspur Software Holdings, Inc.",
@@ -267,9 +267,9 @@ export const PROJECT_CEDAR: Deal = {
           id: "ownership",
           label: "Beneficial ownership > 10%",
           rows: [
-            { key: "Sponsor:Aldercrest Capital Partners IV", value: "62.4%" },
-            { key: "Founder:A. Maddox", value: "11.8%" },
-            { key: "Co-founder:R. Patel", value: "10.2%" },
+            { key: "Sponsor · Aldercrest Capital Partners IV", value: "62.4%" },
+            { key: "Founder · A. Maddox", value: "11.8%" },
+            { key: "Co-founder · R. Patel", value: "10.2%" },
           ],
           visibleTo: ["compliance_reviewer"],
           redactionReason:
@@ -309,7 +309,7 @@ export const PROJECT_CEDAR: Deal = {
     },
     {
       id: "legal-opinion",
-      title: "Legal Opinion:Borrower Counsel",
+      title: "Legal Opinion · Borrower Counsel",
       type: "legal_opinion",
       date: "2026-08-12",
       sourceParty: "Holloway & Reed LLP (Borrower Counsel)",
@@ -348,7 +348,7 @@ export const PROJECT_CEDAR: Deal = {
     },
     {
       id: "auditor-report",
-      title: "Auditor Report:FY2025",
+      title: "Auditor Report · FY2025",
       type: "auditor_report",
       date: "2026-04-18",
       sourceParty: "Holman & Yates LLP (Independent Auditor)",
@@ -369,7 +369,7 @@ export const PROJECT_CEDAR: Deal = {
         },
         {
           id: "kam-revenue",
-          label: "Key audit matter:revenue recognition",
+          label: "Key audit matter / revenue recognition",
           body:
             "Subscription revenue is recognized ratably over the contract term. We tested management's allocation of transaction price across performance obligations on a sample of 42 customer contracts representing 31% of FY2025 revenue. No material misstatements identified.",
           visibleTo: ["investor_analyst", "compliance_reviewer"],
@@ -378,7 +378,7 @@ export const PROJECT_CEDAR: Deal = {
         },
         {
           id: "kam-acquisition",
-          label: "Key audit matter:purchase price allocation",
+          label: "Key audit matter / purchase price allocation",
           body:
             "FY2024 acquisition of MeridianRoute, Inc. resulted in USD 6.2M of goodwill. We tested the underlying valuation, including the discount rate (12.4%) and customer attrition assumption (8% per annum), and found the assumptions to be within an acceptable range.",
           visibleTo: ["investor_analyst", "compliance_reviewer"],
@@ -389,7 +389,7 @@ export const PROJECT_CEDAR: Deal = {
     },
     {
       id: "mnda",
-      title: "Mutual NDA:Counterparty Engagement",
+      title: "Mutual NDA · Counterparty Engagement",
       type: "mnda",
       date: "2026-06-02",
       sourceParty: "Larkspur Software Holdings, Inc. / Cascade Pension Trust",

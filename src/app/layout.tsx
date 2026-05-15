@@ -17,9 +17,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Acephalt Diligence Workspace: Project Cedar (concept)",
+  title: "Acephalt Diligence Workspace: Project Cedar",
   description:
-    "Concept-level mock of a multi-role diligence workspace. Field-level redaction, audit ribbon, three role lenses. Not derived from any internal Acephalt source.",
+    "Scoped diligence prototype showing role-based access outcomes, field-level redaction, and sample audit telemetry across three reviewer lenses.",
 };
 
 export default function RootLayout({

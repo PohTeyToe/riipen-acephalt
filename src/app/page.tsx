@@ -12,11 +12,13 @@ import {
   firstRedactionReason,
   totalRedactions,
 } from "@/lib/redactionEngine";
+import { evaluateMemoClaim, getMemoClaims } from "@/lib/memoDraft";
 import { Badge } from "@/components/ui/badge";
 import {
   AlertTriangle,
   Briefcase,
   ChevronRight,
+  Scale,
   ShieldAlert,
 } from "lucide-react";
 
@@ -57,6 +59,12 @@ export default function DataRoomPage() {
     const bRedacted = documentAccessSummary(b, role).redacted;
     return bRedacted - aRedacted;
   });
+  const memoClaims = React.useMemo(
+    () => getMemoClaims().map((claim) => evaluateMemoClaim(claim, role)),
+    [role],
+  );
+  const memoAffected = memoClaims.filter((claim) => claim.status !== "supported");
+  const memoSpotlight = memoAffected[0] ?? memoClaims[0];
 
   return (
     <div className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6 lg:px-8">
@@ -172,6 +180,70 @@ export default function DataRoomPage() {
           </div>
         </section>
       ) : null}
+
+      <section className="mt-4 rounded-lg border border-slate-800 bg-slate-950/35">
+        <div className="flex items-center justify-between border-b border-slate-800 px-5 py-3 sm:px-6">
+          <div className="flex items-center gap-2">
+            <Scale className="h-4 w-4 text-blue-400" />
+            <h2 className="text-sm font-semibold text-slate-100">
+              How this role changes the memo
+            </h2>
+          </div>
+          <Badge tone={memoAffected.length === 0 ? "success" : "warning"}>
+            {memoAffected.length} claim{memoAffected.length === 1 ? "" : "s"} affected
+          </Badge>
+        </div>
+        <div className="grid gap-px bg-slate-800 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.95fr)]">
+          <div className="bg-slate-950/70 px-5 py-4 sm:px-6">
+            <div className="text-[11px] uppercase tracking-[0.16em] text-slate-500">
+              Spotlight claim
+            </div>
+            <div className="mt-2 text-sm font-medium leading-relaxed text-slate-100">
+              {memoSpotlight.draft}
+            </div>
+            <p className="mt-3 text-sm leading-relaxed text-slate-300">
+              {memoSpotlight.resolverCopy[memoSpotlight.status]}
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {memoClaims.slice(0, 3).map((claim) => (
+                <Badge
+                  key={claim.id}
+                  tone={
+                    claim.status === "supported"
+                      ? "success"
+                      : claim.status === "conflicted"
+                        ? "warning"
+                        : claim.status === "assumption"
+                          ? "muted"
+                          : "danger"
+                  }
+                >
+                  {claim.shortLabel}
+                </Badge>
+              ))}
+            </div>
+          </div>
+          <Link
+            href="/memo"
+            className="group bg-slate-950/55 px-5 py-4 transition-colors hover:bg-slate-950 sm:px-6"
+          >
+            <div className="text-[11px] uppercase tracking-[0.16em] text-slate-500">
+              Memo draft route
+            </div>
+            <div className="mt-2 text-sm font-medium text-slate-100 group-hover:text-white">
+              Open the source-traced claim review surface
+            </div>
+            <p className="mt-3 text-sm leading-relaxed text-slate-300">
+              Inspect which diligence claims stay supported, which become assumptions,
+              and which break once privileged evidence enters the room.
+            </p>
+            <div className="mt-4 inline-flex items-center gap-1 text-xs text-slate-500 group-hover:text-slate-300">
+              View memo draft
+              <ChevronRight className="h-3.5 w-3.5" />
+            </div>
+          </Link>
+        </div>
+      </section>
 
       <section className="mt-6 rounded-lg border border-slate-800 bg-slate-950/40">
         <div className="flex items-center justify-between border-b border-slate-800 px-4 py-3 sm:px-6">

@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A walkthrough for Acephalt / Abdallah Safi</title>
+<meta name="description" content="A short walkthrough of a scoped diligence-room prototype built as a Riipen application artifact for Acephalt." />
+<style>
+  :root {
+    --paper: #f5f1e8;
+    --paper-warm: #faf6ec;
+    --paper-soft: #efeadb;
+    --card: #ffffff;
+    --ink: #14181b;
+    --ink-2: #2a3034;
+    --ink-3: #5a6166;
+    --ink-4: #8a8478;
+    --rule: #1d2226;
+    --rule-soft: #d4cebd;
+    --rule-hair: #e6e0d1;
+    --accent: #1f3a5f;
+    --accent-soft: #e0e6ef;
+    --accent-bg: #eef2f8;
+    --analyst: #1f3a5f;
+    --compliance: #6a3a0c;
+    --counterparty: #4a4a52;
+    --highlight: #fff3c4;
+    --highlight-rule: #d9c477;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    background: var(--paper);
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    color: var(--ink);
+    font: 17px/1.6 "Source Serif 4", "Source Serif Pro", "Iowan Old Style",
+          Georgia, "Times New Roman", serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .mono, .kicker, .tag, .meta, .nameplate, code, .role-pill, .caption-num {
+    font-family: "JetBrains Mono", "IBM Plex Mono", "SFMono-Regular",
+                 Consolas, "Liberation Mono", monospace;
+  }
+
+  main {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 48px 28px 96px;
+  }
+
+  /* nameplate */
+  .nameplate {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 24px;
+    flex-wrap: wrap;
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .nameplate .right { color: var(--ink-4); }
+
+  /* headline */
+  .kicker {
+    margin: 36px 0 12px;
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  h1 {
+    margin: 0 0 22px;
+    font: 500 2.4rem/1.16 "Source Serif 4", Georgia, serif;
+    letter-spacing: -0.012em;
+    max-width: 760px;
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--ink-2);
+    font-weight: 500;
+  }
+
+  .deck {
+    max-width: 700px;
+    margin: 0 0 28px;
+    font-size: 1.08rem;
+    color: var(--ink-2);
+    line-height: 1.62;
+  }
+
+  .lede {
+    background: var(--paper-warm);
+    border-left: 3px solid var(--accent);
+    padding: 22px 26px;
+    margin: 0 0 40px;
+    border-radius: 2px;
+    box-shadow: 0 1px 0 var(--rule-hair);
+  }
+  .lede p { margin: 0 0 10px; }
+  .lede p:last-child { margin-bottom: 0; }
+
+  /* section heads */
+  h2 {
+    margin: 56px 0 14px;
+    font: 500 1.35rem/1.25 "Source Serif 4", Georgia, serif;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+  }
+  h2 .num {
+    color: var(--ink-4);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    font-weight: 400;
+    margin-right: 12px;
+    vertical-align: 4px;
+  }
+
+  h3 {
+    margin: 28px 0 8px;
+    font: 600 1.02rem/1.3 "Source Serif 4", Georgia, serif;
+    color: var(--ink);
+  }
+
+  p { margin: 0 0 14px; }
+
+  a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule-soft);
+    transition: border-color 0.15s ease;
+  }
+  a:hover { border-color: var(--accent); }
+
+  /* divider */
+  hr.rule {
+    border: 0;
+    border-top: 1px solid var(--rule-soft);
+    margin: 0;
+  }
+
+  /* figure / screenshot */
+  figure {
+    margin: 18px 0 24px;
+    padding: 0;
+  }
+  figure .frame {
+    background: #0a0d12;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 10px;
+    box-shadow: 0 1px 0 var(--rule-hair), 0 8px 24px rgba(15, 18, 22, 0.08);
+  }
+  figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 2px;
+  }
+  figcaption {
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px;
+    align-items: start;
+  }
+  .caption-num {
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    color: var(--ink-3);
+    padding-top: 2px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .caption-body {
+    font-size: 14.5px;
+    color: var(--ink-2);
+    line-height: 1.55;
+  }
+  .caption-body strong { color: var(--ink); font-weight: 600; }
+
+  /* annotation list under figures */
+  .annotations {
+    margin: 6px 0 8px;
+    padding: 16px 18px;
+    background: var(--paper-warm);
+    border: 1px solid var(--rule-hair);
+    border-radius: 3px;
+    list-style: none;
+  }
+  .annotations li {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 12px;
+    padding: 8px 0;
+    font-size: 14.5px;
+    line-height: 1.5;
+    color: var(--ink-2);
+    border-bottom: 1px dashed var(--rule-hair);
+  }
+  .annotations li:last-child { border-bottom: 0; }
+  .annotations li .pin {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    background: var(--ink);
+    color: var(--paper-warm);
+    border-radius: 50%;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10.5px;
+    font-weight: 600;
+    margin-top: 1px;
+  }
+  .annotations li strong { color: var(--ink); }
+
+  /* role row */
+  .roles {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin: 20px 0 8px;
+  }
+  .role {
+    background: var(--card);
+    border: 1px solid var(--rule-hair);
+    border-radius: 3px;
+    padding: 16px 18px;
+  }
+  .role .role-pill {
+    display: inline-block;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  .role.analyst { border-top: 3px solid var(--analyst); }
+  .role.analyst .role-pill { background: var(--accent-bg); color: var(--analyst); }
+  .role.compliance { border-top: 3px solid var(--compliance); }
+  .role.compliance .role-pill { background: #f4ead8; color: var(--compliance); }
+  .role.counter { border-top: 3px solid var(--counterparty); }
+  .role.counter .role-pill { background: #ececef; color: var(--counterparty); }
+  .role p { margin: 0; font-size: 14.5px; color: var(--ink-2); }
+  .role .sees, .role .hides {
+    display: block;
+    margin-top: 8px;
+    font-size: 13.5px;
+    color: var(--ink-3);
+  }
+  .role .sees::before { content: "Sees: "; color: var(--ink); font-weight: 600; }
+  .role .hides::before { content: "Doesn't: "; color: var(--ink); font-weight: 600; }
+
+  /* useful-where block */
+  .useful {
+    background: var(--card);
+    border: 1px solid var(--rule-hair);
+    border-radius: 3px;
+    padding: 22px 26px;
+    margin: 14px 0 8px;
+  }
+  .useful h3 { margin-top: 0; }
+  .useful ul { margin: 0; padding-left: 18px; }
+  .useful li { margin-bottom: 8px; font-size: 15.5px; color: var(--ink-2); line-height: 1.55; }
+
+  /* small list */
+  ul.clean { margin: 8px 0 16px; padding-left: 18px; }
+  ul.clean li { margin-bottom: 6px; color: var(--ink-2); }
+
+  /* footnote / disclaimer */
+  .disclaimer {
+    margin-top: 64px;
+    padding: 18px 22px;
+    background: var(--paper-soft);
+    border: 1px solid var(--rule-hair);
+    border-radius: 3px;
+    font-size: 13.5px;
+    color: var(--ink-3);
+    line-height: 1.55;
+  }
+  .disclaimer strong { color: var(--ink-2); }
+
+  .signoff {
+    margin-top: 48px;
+    padding-top: 28px;
+    border-top: 1px solid var(--rule-soft);
+    font-size: 15px;
+    color: var(--ink-2);
+  }
+  .signoff .from {
+    margin-top: 12px;
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-4);
+    font-family: "JetBrains Mono", monospace;
+  }
+
+  .links {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin: 10px 0 0;
+    font-size: 13.5px;
+  }
+  .links a { font-family: "JetBrains Mono", monospace; letter-spacing: 0.06em; }
+
+  /* responsive */
+  @media (max-width: 720px) {
+    main { padding: 36px 18px 64px; }
+    h1 { font-size: 1.85rem; }
+    .roles { grid-template-columns: 1fr; }
+    figcaption { grid-template-columns: 1fr; gap: 4px; }
+    .caption-num { padding-top: 0; }
+  }
+</style>
+</head>
+<body>
+<main>
+
+  <!-- nameplate -->
+  <div class="nameplate">
+    <span class="left">Abdallah Safi &middot; Walkthrough</span>
+    <span class="right">Riipen application artifact &middot; May 2026</span>
+  </div>
+
+  <!-- headline -->
+  <div class="kicker">A demo for Acephalt</div>
+  <h1>A small diligence room, read three different ways, <em>so the trust boundary stops living in spreadsheets.</em></h1>
+
+  <p class="deck">
+    I built a scoped prototype of one corner of a deal room and shipped it on Vercel.
+    This page walks through what it is, why I think it matters, and the few decisions
+    I made along the way. It should take about four minutes.
+  </p>
+
+  <div class="lede">
+    <p>Hi Nicolas,</p>
+    <p>
+      I came across the Riipen posting and spent a weekend building something I
+      could actually point at instead of describing in a cover letter. What follows
+      is a short tour of that prototype and a quick note on where I think I would
+      be useful.
+    </p>
+    <p>
+      Everything in here is invented. No internal Acephalt material was used. I
+      just wanted to make the conversation more concrete than a resume.
+    </p>
+  </div>
+
+  <hr class="rule" />
+
+  <!-- 1. WHY -->
+  <h2><span class="num">01</span> Why this problem caught my attention</h2>
+  <p>
+    Acephalt&rsquo;s public framing points at the workflow around investment
+    decisions. The piece that kept pulling on me was the people layer: a single
+    diligence room gets opened by an analyst, a compliance reviewer, and an external
+    counterparty in the same week. Each one has a legitimate, different idea of what
+    they should be allowed to see.
+  </p>
+  <p>
+    In practice that gets handled by either splitting one document into three different
+    files, or by keeping sensitive material out of the room entirely and emailing it
+    around. Both feel like the kind of friction a platform eventually has to absorb.
+    I wanted to see what it would look like if a room understood roles natively.
+  </p>
+
+  <!-- 2. PROBLEM -->
+  <h2><span class="num">02</span> The problem in one paragraph</h2>
+  <p>
+    A diligence room today is mostly view-only or full-access. That makes the people
+    running the deal pick between oversharing or splitting one artifact into three
+    copies for three audiences. The decision about <em>who sees what</em> ends up
+    living in someone&rsquo;s head, or in a checklist, or in a series of folder
+    permissions that nobody can audit later. The prototype asks a smaller question:
+    what if that decision lived in one place, at the level of individual fields, and
+    the room rendered itself accordingly?
+  </p>
+
+  <!-- 3. WALKTHROUGH -->
+  <h2><span class="num">03</span> A short tour of the demo</h2>
+  <p>
+    The live site is at
+    <a href="https://riipen-acephalt.vercel.app" target="_blank" rel="noreferrer">riipen-acephalt.vercel.app</a>.
+    There are three things to see. I will narrate each one.
+  </p>
+
+  <h3>The room</h3>
+  <figure>
+    <div class="frame">
+      <img src="/brief/home.png" alt="Project Cedar diligence room: header with deal facts, role hotspots, and a table of nine documents with redaction badges." />
+    </div>
+    <figcaption>
+      <span class="caption-num">01 &middot; The room</span>
+      <span class="caption-body">
+        <strong>What you are looking at.</strong> A fictional senior secured term loan called
+        Project Cedar. The role selector in the top right is the only control on the page.
+        Toggling it re-renders every count, every badge, and every preview line below it.
+      </span>
+    </figcaption>
+    <ul class="annotations">
+      <li><span class="pin">1</span><span><strong>Role selector.</strong> The same room read three different ways. Try Compliance Reviewer to see what full access looks like, and External Counterparty to see how much falls away.</span></li>
+      <li><span class="pin">2</span><span><strong>Hotspots row.</strong> The three documents with the most redaction friction for the current role. This is where the policy is most visibly doing work.</span></li>
+      <li><span class="pin">3</span><span><strong>Document table.</strong> Each row shows the first redaction reason directly under the file name. The reviewer can read the trust boundary without opening anything.</span></li>
+    </ul>
+  </figure>
+
+  <h3>A document, read through three lenses</h3>
+  <figure>
+    <div class="frame">
+      <img src="/brief/document.png" alt="Side letter detail page showing the active redaction reason, a three-role comparison strip, and a seeded access log." />
+    </div>
+    <figcaption>
+      <span class="caption-num">02 &middot; The document</span>
+      <span class="caption-body">
+        <strong>What changed at this level.</strong> Same document, three lenses at the top of
+        the page. The reviewer sees what the analyst sees, what compliance sees, and what the
+        counterparty sees, without toggling roles. The point is to make the trust boundary
+        legible at a glance.
+      </span>
+    </figcaption>
+    <ul class="annotations">
+      <li><span class="pin">1</span><span><strong>Three-role strip.</strong> Field counts visible to each role on this single artifact. The same file can be a public summary for one party and a privileged annex for another.</span></li>
+      <li><span class="pin">2</span><span><strong>Most-redacted clause.</strong> The page surfaces the highest-friction passage for the active role, with the redaction reason inline.</span></li>
+      <li><span class="pin">3</span><span><strong>Seeded access log.</strong> A prototype shape for what a real append-only audit layer would expose. Not a real log. A picture of one.</span></li>
+    </ul>
+  </figure>
+
+  <h3>A memo that points back at the room</h3>
+  <figure>
+    <div class="frame">
+      <img src="/brief/memo.png" alt="Memo draft view showing claim cards, each linked to the source documents and visible fields that support it." />
+    </div>
+    <figcaption>
+      <span class="caption-num">03 &middot; The memo</span>
+      <span class="caption-body">
+        <strong>The consequence.</strong> A short investment memo drafted from the same room.
+        Every claim card is bound to the documents and fields that support it. Change the
+        viewer&rsquo;s role and the memo re-renders honestly: claims that can no longer be
+        sourced lose their evidence and call themselves out.
+      </span>
+    </figcaption>
+    <ul class="annotations">
+      <li><span class="pin">1</span><span><strong>Claim cards.</strong> Each one carries the source documents, the supporting fields, and a verdict (keep, revisit, escalate).</span></li>
+      <li><span class="pin">2</span><span><strong>Role-aware sourcing.</strong> A claim that lost its evidence under the current role says so plainly, instead of quietly inheriting yesterday&rsquo;s confidence.</span></li>
+      <li><span class="pin">3</span><span><strong>Why this exists.</strong> The memo is the secondary artifact. It is here to show that the field-level policy has downstream consequences worth caring about, not just badges in a table.</span></li>
+    </ul>
+  </figure>
+
+  <p>
+    The memo is reachable directly at
+    <a href="/memo">/memo</a> if you want to skip past the room view.
+  </p>
+
+  <!-- 4. ROLES -->
+  <h2><span class="num">04</span> What changes when the role changes</h2>
+  <p>
+    Three roles, not five. Three is what the diligence pattern actually carries:
+    one party doing the underwriting, one party gatekeeping risk, one party with
+    bilateral information rights. Adding more dilutes the argument.
+  </p>
+
+  <div class="roles">
+    <div class="role analyst">
+      <span class="role-pill">Investor Analyst</span>
+      <p>Underwrites the borrower. Reads to build a credit case.</p>
+      <span class="sees">deal terms, covenants, financials, audit reports, KYC summary</span>
+      <span class="hides">beneficial-ownership detail, source-of-funds attestations, counsel-to-counsel correspondence</span>
+    </div>
+    <div class="role compliance">
+      <span class="role-pill">Compliance Reviewer</span>
+      <p>Gatekeeps risk. Reads to clear or block the deal.</p>
+      <span class="sees">everything in the room</span>
+      <span class="hides">nothing, but every page renders with an audit watermark</span>
+    </div>
+    <div class="role counter">
+      <span class="role-pill">External Counterparty</span>
+      <p>Co-lender, borrower-side counsel, or rating agency. Reads only what is bilateral to them.</p>
+      <span class="sees">top-level deal terms, MNDA terms, public auditor opinion, clauses tied to their party</span>
+      <span class="hides">operating metrics, growth plan, KYC pack, side letters that are not theirs</span>
+    </div>
+  </div>
+
+  <!-- 5. WHY IT MATTERS / WHERE I AM USEFUL -->
+  <h2><span class="num">05</span> Why this matters and where I would be useful</h2>
+  <p>
+    The wider claim under the prototype is small but real. If a platform owns the
+    diligence workflow, the trust boundary inside the room eventually becomes part
+    of the product. Field-level policy is one of the smallest believable surfaces
+    where that becomes visible to a user.
+  </p>
+
+  <div class="useful">
+    <h3>Where I would be useful on the team</h3>
+    <ul>
+      <li>Turning fuzzy product framing into the smallest believable artifact, and shipping it. This page and the demo are the example.</li>
+      <li>Front-end work that takes a non-trivial data model seriously. The redaction engine here is one pure function and the UI is a strict consumer of it.</li>
+      <li>Writing the explanation alongside the build. The memo route, the captions on this page, and the document audit log are all the same instinct.</li>
+      <li>Working in the space between design, product, and engineering. I do not need a handoff to make a screen real.</li>
+    </ul>
+  </div>
+
+  <!-- 6. WHAT I LEFT OUT -->
+  <h2><span class="num">06</span> What I intentionally kept small</h2>
+  <p>
+    The scope was two screens, sample JSON, and no backend. I held the line on that.
+  </p>
+  <ul class="clean">
+    <li>No LLM call. The memo is hand-authored claim cards bound to the field policy, not generated text.</li>
+    <li>No real auth. The role switcher is a client-side selector that stands in for a server-enforced session role.</li>
+    <li>No flagging, no commenting, no upload flow. Those are different artifacts.</li>
+    <li>No five-role taxonomy or tenancy model. Three roles is enough to make the argument legible.</li>
+  </ul>
+  <p>
+    A production version would push the same predicate down to the database layer.
+    Either a row-level security policy keyed on field and role, or a server-side filter
+    applied before any field set leaves the API. The prototype&rsquo;s job is to make
+    that future shape feel inevitable, not to be that future shape.
+  </p>
+
+  <!-- 7. CLOSING -->
+  <h2><span class="num">07</span> A short closing note</h2>
+  <p>
+    If any of this is useful, I would love to talk. If it lands wide of where you
+    are actually trying to take the product, I would also love to hear that. Either
+    is a better outcome than guessing from the outside.
+  </p>
+  <p>
+    Thank you for reading this far.
+  </p>
+
+  <div class="signoff">
+    <div>Abdallah Safi</div>
+    <div class="from">Toronto &middot; May 2026</div>
+    <div class="links">
+      <a href="https://riipen-acephalt.vercel.app" target="_blank" rel="noreferrer">riipen-acephalt.vercel.app</a>
+      <a href="/">the room</a>
+      <a href="/memo">the memo</a>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    <strong>Disclaimer.</strong> Project Cedar, Larkspur Software Holdings, Aldercrest Capital
+    Partners, Cascade Pension Trust, Northbank Credit Partners, and all other parties
+    and figures in the prototype are invented. The redaction taxonomy is an opinion
+    drawn from public diligence-workflow vocabulary, not a description of any internal
+    Acephalt product or schema. Nothing here is presented as affiliated work or as an
+    endorsement by Acephalt.
+  </div>
+
+</main>
+</body>
+</html>

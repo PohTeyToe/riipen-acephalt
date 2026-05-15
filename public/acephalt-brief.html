@@ -3,136 +3,621 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="light" />
 <title>A walkthrough for Acephalt / Abdallah Safi</title>
 <meta name="description" content="A short walkthrough of a scoped diligence-room prototype built as a Riipen application artifact for Acephalt." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
+  *, *::before, *::after { box-sizing: border-box; }
+
   :root {
-    --paper: #f5f1e8;
-    --paper-warm: #faf6ec;
-    --paper-soft: #efeadb;
-    --card: #ffffff;
-    --ink: #14181b;
-    --ink-2: #2a3034;
-    --ink-3: #5a6166;
-    --ink-4: #8a8478;
-    --rule: #1d2226;
-    --rule-soft: #d4cebd;
-    --rule-hair: #e6e0d1;
-    --accent: #1f3a5f;
-    --accent-soft: #e0e6ef;
-    --accent-bg: #eef2f8;
-    --analyst: #1f3a5f;
-    --compliance: #6a3a0c;
+    --paper:        #f4efe2;
+    --paper-warm:   #faf5e8;
+    --paper-deep:   #ece5d1;
+    --paper-card:   #fffdf6;
+    --ink:          #15191d;
+    --ink-2:        #2a3036;
+    --ink-3:        #565d65;
+    --ink-4:        #8a8474;
+    --rule:         #1d2127;
+    --rule-soft:    #d6ceba;
+    --rule-hair:    #e6dfca;
+    --accent:       #1f3a5f;
+    --accent-soft:  #2d4a73;
+    --accent-bg:    #e6ecf3;
+    --analyst:      #1f3a5f;
+    --analyst-bg:   #e3eaf3;
+    --compliance:   #8a4a13;
+    --compliance-bg:#f4e9d3;
     --counterparty: #4a4a52;
-    --highlight: #fff3c4;
-    --highlight-rule: #d9c477;
+    --counterparty-bg:#ebeaee;
+    --gold:         #b48a3c;
+    --gold-deep:    #8c6720;
+    --gold-bg:      #f3e8ce;
+    --gold-border:  #d9c47f;
+    --shadow-sm:    0 1px 0 var(--rule-hair), 0 2px 6px rgba(33, 26, 12, 0.04);
+    --shadow:       0 1px 0 var(--rule-hair), 0 12px 28px rgba(33, 26, 12, 0.08);
+    --shadow-lg:    0 1px 0 var(--rule-hair), 0 28px 60px rgba(33, 26, 12, 0.12);
   }
 
-  * { box-sizing: border-box; }
-  html, body {
-    background: var(--paper);
-    margin: 0;
-    padding: 0;
-  }
-
+  html { scroll-behavior: smooth; }
   body {
+    margin: 0;
+    background:
+      radial-gradient(ellipse 1100px 600px at 50% -10%, rgba(180, 138, 60, 0.18), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 92% 30%, rgba(31, 58, 95, 0.06), transparent 60%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0)),
+      var(--paper);
     color: var(--ink);
-    font: 17px/1.6 "Source Serif 4", "Source Serif Pro", "Iowan Old Style",
-          Georgia, "Times New Roman", serif;
+    font: 16.5px/1.65 "Source Serif 4", "Iowan Old Style", Georgia, "Times New Roman", serif;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
 
-  .mono, .kicker, .tag, .meta, .nameplate, code, .role-pill, .caption-num {
-    font-family: "JetBrains Mono", "IBM Plex Mono", "SFMono-Regular",
-                 Consolas, "Liberation Mono", monospace;
+  .mono, code, .eyebrow, .nameplate, .caption-num, .pin, .role-pill, .doc-tag, .action-sub, .from, .section-num, .wf-sub, .preview-badge {
+    font-family: "JetBrains Mono", "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   }
 
-  main {
-    max-width: 920px;
+  /* -------------------- COVER -------------------- */
+  .cover {
+    position: relative;
+    overflow: hidden;
+    padding: 56px max(1.5rem, calc((100vw - 1080px) / 2)) 44px;
+    background:
+      radial-gradient(circle at 90% 18%, rgba(180, 138, 60, 0.22), transparent 58%),
+      linear-gradient(180deg, var(--paper-deep) 0%, var(--paper-warm) 65%, rgba(244, 231, 205, 0.3) 100%);
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 360px; height: 360px;
+    background: radial-gradient(circle, rgba(31, 58, 95, 0.10), transparent 70%);
+    pointer-events: none;
+  }
+  .cover-inner {
+    position: relative;
+    max-width: 1080px;
     margin: 0 auto;
-    padding: 48px 28px 96px;
+    display: grid;
+    grid-template-columns: 1.25fr 0.95fr;
+    gap: 3rem;
+    align-items: center;
   }
 
-  /* nameplate */
+  .topbar {
+    position: relative;
+    max-width: 1080px;
+    margin: 0 auto 26px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(120, 90, 40, 0.18);
+  }
+  .topbar-mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .topbar-dots {
+    display: inline-flex;
+    gap: 4px;
+  }
+  .topbar-dots i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .topbar-dots i:nth-child(1) { background: var(--analyst); }
+  .topbar-dots i:nth-child(2) { background: var(--compliance); }
+  .topbar-dots i:nth-child(3) { background: var(--counterparty); }
+  .topbar-note { color: var(--ink-4); }
+
+  .topbar-links {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .topbar-links a {
+    text-decoration: none;
+    border: 0;
+    color: var(--ink-3);
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 7px 12px;
+    border-radius: 999px;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+  .topbar-links a:hover,
+  .topbar-links a:focus-visible {
+    background: rgba(255, 255, 255, 0.55);
+    color: var(--ink);
+    outline: none;
+  }
+  .topbar-links a.is-live {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(120, 90, 40, 0.18);
+    box-shadow: var(--shadow-sm);
+  }
+  .topbar-links a.is-live::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #4f9d71;
+    box-shadow: 0 0 0 3px rgba(79, 157, 113, 0.18);
+  }
+
   .nameplate {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
     gap: 24px;
     flex-wrap: wrap;
     font-size: 10.5px;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--ink-3);
-    padding-bottom: 14px;
-    border-bottom: 1px solid var(--rule);
+    color: var(--ink-4);
+    margin-bottom: 18px;
   }
   .nameplate .right { color: var(--ink-4); }
 
-  /* headline */
-  .kicker {
-    margin: 36px 0 12px;
-    font-size: 11px;
-    letter-spacing: 0.24em;
+  .hero-meta {
+    margin: 0 0 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .hero-meta strong {
     color: var(--accent);
+    font-weight: 600;
   }
-  h1 {
-    margin: 0 0 22px;
-    font: 500 2.4rem/1.16 "Source Serif 4", Georgia, serif;
-    letter-spacing: -0.012em;
-    max-width: 760px;
-  }
-  h1 em {
-    font-style: italic;
-    color: var(--ink-2);
-    font-weight: 500;
+  .hero-meta .rule {
+    width: 26px;
+    height: 1px;
+    background: rgba(120, 90, 40, 0.24);
+    display: inline-block;
   }
 
-  .deck {
-    max-width: 700px;
-    margin: 0 0 28px;
-    font-size: 1.08rem;
+  .eyebrow {
+    margin: 0 0 0.9rem;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .eyebrow::before {
+    content: '';
+    width: 28px; height: 1.5px;
+    background: var(--accent);
+    display: inline-block;
+    opacity: 0.7;
+  }
+
+  .cover h1 {
+    margin: 0 0 1.05rem;
+    font: 500 clamp(2rem, 4.2vw, 2.7rem)/1.14 "Source Serif 4", Georgia, serif;
+    letter-spacing: -0.012em;
+    color: var(--ink);
+  }
+  .cover h1 em {
+    font-style: italic;
+    font-weight: 500;
+    color: var(--accent);
+  }
+
+  .cover-deck {
+    max-width: 58ch;
+    margin: 0 0 1.5rem;
+    font-size: 1.05rem;
     color: var(--ink-2);
     line-height: 1.62;
   }
 
-  .lede {
-    background: var(--paper-warm);
-    border-left: 3px solid var(--accent);
-    padding: 22px 26px;
-    margin: 0 0 40px;
-    border-radius: 2px;
-    box-shadow: 0 1px 0 var(--rule-hair);
+  .hero-note {
+    max-width: 54ch;
+    margin: 0 0 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(120, 90, 40, 0.2);
+    font-size: 14.5px;
+    color: var(--ink-3);
+    line-height: 1.62;
   }
-  .lede p { margin: 0 0 10px; }
-  .lede p:last-child { margin-bottom: 0; }
+  .hero-note strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
 
-  /* section heads */
-  h2 {
-    margin: 56px 0 14px;
-    font: 500 1.35rem/1.25 "Source Serif 4", Georgia, serif;
-    letter-spacing: -0.005em;
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 1.3rem;
+  }
+  .hero-actions .hero-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 13px 20px;
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--paper-warm);
+    border: 1px solid var(--ink);
+    box-shadow: var(--shadow);
+    font: 600 14.5px/1 "Source Serif 4", Georgia, serif;
+    text-decoration: none;
+  }
+  .hero-actions .hero-primary:hover,
+  .hero-actions .hero-primary:focus-visible {
+    background: var(--accent);
+    border-color: var(--accent);
+    outline: none;
+  }
+  .hero-actions .hero-primary .arrow {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.15);
+    font-size: 12px;
+    font-family: "JetBrains Mono", monospace;
+  }
+  .hero-actions .hero-secondary {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(120, 90, 40, 0.22);
+    color: var(--ink);
+    text-decoration: none;
+    font: 500 14px/1 "Source Serif 4", Georgia, serif;
+  }
+  .hero-actions .hero-secondary:hover,
+  .hero-actions .hero-secondary:focus-visible {
+    border-bottom-color: var(--accent);
+    color: var(--accent);
+    outline: none;
+  }
+  .hero-actions .hero-secondary span {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-4);
+  }
+
+  .cover-sign {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding-top: 1.1rem;
+    margin-top: 1.2rem;
+    border-top: 1px solid rgba(120, 90, 40, 0.22);
+  }
+  .cover-sign-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-soft) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Source Serif 4", Georgia, serif;
+    font-weight: 600;
+    color: var(--paper-warm);
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+  .cover-sign-text {
+    font-size: 13px;
+    color: var(--ink-3);
+    line-height: 1.45;
+  }
+  .cover-sign-text strong {
+    color: var(--ink);
+    display: block;
+    font-size: 13.5px;
+    font-weight: 600;
+  }
+
+  .cover-aside {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .preview-stack {
+    position: relative;
+    width: 340px;
+    height: 380px;
+  }
+  .preview-card {
+    position: absolute;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #0a0d12;
+    box-shadow: var(--shadow-lg);
+    border: 6px solid #fffdf6;
+    transition: transform 0.35s ease;
+  }
+  .preview-card-chrome {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 24px;
+    padding: 0 12px;
+    background: #10161e;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    color: rgba(226, 232, 240, 0.7);
+    font-size: 9.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .preview-card-chrome i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .preview-card-chrome i:nth-child(1) { background: #d56565; }
+  .preview-card-chrome i:nth-child(2) { background: #d8b860; }
+  .preview-card-chrome i:nth-child(3) { background: #74a982; }
+  .preview-card-chrome span {
+    margin-left: 8px;
+  }
+  .preview-card img {
+    display: block;
+    width: 100%;
+    height: calc(100% - 24px);
+    object-fit: cover;
+    object-position: top left;
+  }
+  .preview-1 {
+    top: 12px;
+    left: 0;
+    width: 230px;
+    height: 320px;
+    transform: rotate(-4.5deg);
+    z-index: 1;
+  }
+  .preview-2 {
+    bottom: 0;
+    right: 0;
+    width: 230px;
+    height: 320px;
+    transform: rotate(4.5deg);
+    z-index: 2;
+  }
+  .preview-stack:hover .preview-1 { transform: rotate(-6deg) translateY(-3px); }
+  .preview-stack:hover .preview-2 { transform: rotate(6deg) translateY(-3px); }
+
+  .preview-live,
+  .preview-chip {
+    position: absolute;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.45rem 0.85rem;
+    border-radius: 999px;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    box-shadow: var(--shadow);
+    white-space: nowrap;
+  }
+  .preview-live {
+    top: -10px;
+    left: 18px;
+    background: var(--ink);
+    color: var(--paper-warm);
+  }
+  .preview-live::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #4f9d71;
+    box-shadow: 0 0 0 3px rgba(79, 157, 113, 0.18);
+  }
+  .preview-chip {
+    background: var(--paper-card);
+    border: 1px solid var(--rule-soft);
     color: var(--ink);
   }
-  h2 .num {
+  .preview-chip.is-room {
+    bottom: -10px;
+    left: 24px;
+  }
+  .preview-chip.is-doc {
+    top: 76px;
+    right: -6px;
+    background: var(--compliance-bg);
+    color: var(--compliance);
+  }
+  .preview-chip::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.85;
+  }
+
+  @media (max-width: 880px) {
+    .cover-inner { grid-template-columns: 1fr; gap: 2rem; }
+    .cover-aside { order: 2; }
+    .preview-stack { width: 300px; height: 340px; margin: 0 auto; }
+    .preview-1, .preview-2 { width: 200px; height: 280px; }
+  }
+  @media (max-width: 540px) {
+    .preview-stack { display: none; }
+  }
+
+  /* -------------------- SCOPE STRIP -------------------- */
+  .scope-strip {
+    max-width: 1080px;
+    margin: -18px auto 0;
+    padding: 0 1.5rem;
+    position: relative;
+    z-index: 4;
+  }
+  .scope-strip-inner {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: rgba(255, 253, 246, 0.92);
+    border: 1px solid rgba(120, 90, 40, 0.14);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+  }
+  .scope-tile {
+    padding: 20px 22px 18px;
+    border-right: 1px solid var(--rule-hair);
+  }
+  .scope-tile:last-child { border-right: 0; }
+  .scope-k {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
     color: var(--ink-4);
-    font-family: "JetBrains Mono", monospace;
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    font-weight: 400;
-    margin-right: 12px;
-    vertical-align: 4px;
+  }
+  .scope-v {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font: 500 1.65rem/1.05 "Source Serif 4", Georgia, serif;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .scope-v em {
+    font-style: italic;
+  }
+  .scope-v small {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-4);
+    font-style: normal;
+  }
+  .scope-sub {
+    margin-top: 6px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--ink-3);
+  }
+  .scope-dots {
+    display: inline-flex;
+    gap: 5px;
+    margin-bottom: 8px;
+  }
+  .scope-dots i {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .scope-dots i:nth-child(1) { background: var(--analyst); }
+  .scope-dots i:nth-child(2) { background: var(--compliance); }
+  .scope-dots i:nth-child(3) { background: var(--counterparty); }
+  @media (max-width: 880px) {
+    .scope-strip-inner { grid-template-columns: repeat(2, 1fr); }
+    .scope-tile:nth-child(2) { border-right: 0; }
+    .scope-tile:nth-child(1),
+    .scope-tile:nth-child(2) { border-bottom: 1px solid var(--rule-hair); }
+  }
+  @media (max-width: 720px) {
+    .topbar-links { gap: 8px; }
+    .topbar-links a { padding: 7px 10px; }
+    .hero-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .hero-actions .hero-primary,
+    .hero-actions .hero-secondary {
+      justify-content: space-between;
+      width: 100%;
+    }
+    .scope-strip {
+      margin-top: -10px;
+    }
+    .scope-strip-inner { grid-template-columns: 1fr; }
+    .scope-tile {
+      border-right: 0;
+      border-bottom: 1px solid var(--rule-hair);
+    }
+    .scope-tile:last-child { border-bottom: 0; }
+    .preview-chip.is-doc { display: none; }
+    .topbar-note { display: none; }
+  }
+
+  /* -------------------- CONTENT -------------------- */
+  main.content {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 56px 1.5rem 96px;
+  }
+  .section { margin-bottom: 60px; }
+  .section:last-child { margin-bottom: 0; }
+
+  h2 {
+    margin: 0 0 14px;
+    font: 500 1.55rem/1.22 "Source Serif 4", Georgia, serif;
+    letter-spacing: -0.008em;
+    color: var(--ink);
+    max-width: 34ch;
+  }
+  h2 em {
+    font-style: italic;
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .section-lead {
+    max-width: 64ch;
+    margin: 0 0 0.4rem;
+    color: var(--ink-2);
+    font-size: 16.5px;
+    line-height: 1.65;
   }
 
   h3 {
-    margin: 28px 0 8px;
-    font: 600 1.02rem/1.3 "Source Serif 4", Georgia, serif;
+    margin: 32px 0 10px;
+    font: 600 1.05rem/1.3 "Source Serif 4", Georgia, serif;
     color: var(--ink);
   }
 
-  p { margin: 0 0 14px; }
+  p { margin: 0 0 14px; color: var(--ink-2); }
+  p:last-child { margin-bottom: 0; }
 
   a {
     color: var(--accent);
@@ -142,478 +627,803 @@
   }
   a:hover { border-color: var(--accent); }
 
-  /* divider */
-  hr.rule {
-    border: 0;
-    border-top: 1px solid var(--rule-soft);
-    margin: 0;
+  /* -------------------- LEDE LETTER -------------------- */
+  .lede {
+    background: var(--paper-card);
+    border: 1px solid var(--rule-hair);
+    border-left: 3px solid var(--accent);
+    padding: 24px 28px;
+    margin: 0 0 8px;
+    border-radius: 3px;
+    box-shadow: var(--shadow-sm);
+  }
+  .lede p { margin: 0 0 12px; color: var(--ink-2); font-size: 16.5px; }
+  .lede p:last-child { margin-bottom: 0; }
+  .lede .salutation {
+    color: var(--ink);
+    font-weight: 500;
   }
 
-  /* figure / screenshot */
+  /* -------------------- FIGURES -------------------- */
   figure {
-    margin: 18px 0 24px;
+    margin: 18px 0 8px;
     padding: 0;
   }
-  figure .frame {
+  .frame {
+    position: relative;
     background: #0a0d12;
     border: 1px solid var(--rule);
-    border-radius: 4px;
+    border-radius: 6px;
     padding: 10px;
-    box-shadow: 0 1px 0 var(--rule-hair), 0 8px 24px rgba(15, 18, 22, 0.08);
+    box-shadow: var(--shadow);
   }
-  figure img {
+  .frame::before {
+    content: '';
+    position: absolute;
+    top: 6px; left: 12px;
+    width: 38px; height: 8px;
+    background:
+      radial-gradient(circle 3px at 4px 4px, #d56565 99%, transparent 100%),
+      radial-gradient(circle 3px at 18px 4px, #d8b860 99%, transparent 100%),
+      radial-gradient(circle 3px at 32px 4px, #74a982 99%, transparent 100%);
+    background-repeat: no-repeat;
+    z-index: 1;
+  }
+  .frame img {
     display: block;
     width: 100%;
     height: auto;
-    border-radius: 2px;
-  }
-  figcaption {
+    border-radius: 3px;
     margin-top: 12px;
+  }
+
+  figcaption {
+    margin-top: 14px;
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: 12px;
+    gap: 14px;
     align-items: start;
   }
   .caption-num {
     font-size: 10.5px;
     letter-spacing: 0.18em;
     color: var(--ink-3);
-    padding-top: 2px;
+    padding-top: 3px;
     text-transform: uppercase;
     white-space: nowrap;
   }
   .caption-body {
-    font-size: 14.5px;
+    font-size: 15px;
     color: var(--ink-2);
-    line-height: 1.55;
+    line-height: 1.6;
   }
   .caption-body strong { color: var(--ink); font-weight: 600; }
 
-  /* annotation list under figures */
   .annotations {
-    margin: 6px 0 8px;
-    padding: 16px 18px;
+    margin: 10px 0 0;
+    padding: 18px 22px;
     background: var(--paper-warm);
     border: 1px solid var(--rule-hair);
-    border-radius: 3px;
+    border-radius: 4px;
     list-style: none;
   }
   .annotations li {
     display: grid;
     grid-template-columns: 28px 1fr;
-    gap: 12px;
-    padding: 8px 0;
+    gap: 14px;
+    padding: 10px 0;
     font-size: 14.5px;
-    line-height: 1.5;
+    line-height: 1.55;
     color: var(--ink-2);
     border-bottom: 1px dashed var(--rule-hair);
   }
   .annotations li:last-child { border-bottom: 0; }
-  .annotations li .pin {
+  .pin {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 22px;
-    height: 22px;
+    width: 22px; height: 22px;
     background: var(--ink);
     color: var(--paper-warm);
     border-radius: 50%;
-    font-family: "JetBrains Mono", monospace;
     font-size: 10.5px;
     font-weight: 600;
     margin-top: 1px;
   }
-  .annotations li strong { color: var(--ink); }
+  .annotations strong { color: var(--ink); font-weight: 600; }
 
-  /* role row */
+  /* -------------------- VISIBILITY MATRIX -------------------- */
+  .matrix-shell {
+    margin: 24px 0 0;
+    padding: 20px 22px 22px;
+    background: var(--paper-card);
+    border: 1px solid var(--rule-hair);
+    border-radius: 6px;
+    box-shadow: var(--shadow-sm);
+  }
+  .matrix-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .matrix-head p {
+    margin: 0;
+    max-width: 58ch;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink-3);
+  }
+  .matrix-legend {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-4);
+  }
+  .matrix-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .matrix-key {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    display: inline-block;
+  }
+  .matrix-key.full { background: var(--analyst); }
+  .matrix-key.partial {
+    background: linear-gradient(135deg, var(--compliance) 50%, rgba(138, 74, 19, 0.22) 50%);
+  }
+  .matrix-key.hidden {
+    border: 1px solid rgba(74, 74, 82, 0.36);
+    background: rgba(74, 74, 82, 0.12);
+  }
+  .matrix-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+  .matrix-table thead th {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--rule-hair);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-align: left;
+    color: var(--ink-4);
+  }
+  .matrix-table thead th.role-col {
+    min-width: 130px;
+  }
+  .matrix-table thead th.role-col span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .matrix-table thead th.role-col i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .matrix-table thead th.role-col.analyst i { background: var(--analyst); }
+  .matrix-table thead th.role-col.compliance i { background: var(--compliance); }
+  .matrix-table thead th.role-col.counterparty i { background: var(--counterparty); }
+  .matrix-table tbody td {
+    padding: 12px;
+    border-bottom: 1px solid rgba(230, 223, 202, 0.7);
+    vertical-align: middle;
+  }
+  .matrix-table tbody tr:last-child td {
+    border-bottom: 0;
+  }
+  .matrix-doc {
+    width: 38%;
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.45;
+  }
+  .matrix-doc small {
+    display: block;
+    margin-top: 3px;
+    color: var(--ink-4);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .matrix-state {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .matrix-state::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .matrix-state.full {
+    background: rgba(31, 58, 95, 0.09);
+    color: var(--analyst);
+  }
+  .matrix-state.full::before { background: var(--analyst); }
+  .matrix-state.partial {
+    background: rgba(138, 74, 19, 0.10);
+    color: var(--compliance);
+  }
+  .matrix-state.partial::before { background: var(--compliance); }
+  .matrix-state.hidden {
+    background: rgba(74, 74, 82, 0.08);
+    color: var(--counterparty);
+  }
+  .matrix-state.hidden::before { background: var(--counterparty); opacity: 0.45; }
+  @media (max-width: 820px) {
+    .matrix-shell {
+      padding: 18px 16px;
+      overflow-x: auto;
+    }
+    .matrix-table {
+      min-width: 680px;
+    }
+  }
+
+  /* -------------------- ROLE CARDS -------------------- */
   .roles {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-    margin: 20px 0 8px;
+    gap: 16px;
+    margin: 20px 0 0;
   }
   .role {
-    background: var(--card);
+    position: relative;
+    background: var(--paper-card);
     border: 1px solid var(--rule-hair);
-    border-radius: 3px;
-    padding: 16px 18px;
+    border-radius: 4px;
+    padding: 22px 22px 20px;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
   }
-  .role .role-pill {
+  .role::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 3px;
+    background: currentColor;
+  }
+  .role.analyst { color: var(--analyst); }
+  .role.compliance { color: var(--compliance); }
+  .role.counter { color: var(--counterparty); }
+
+  .role-pill {
     display: inline-block;
     font-size: 10px;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    padding: 3px 8px;
+    padding: 3px 9px;
     border-radius: 999px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    font-weight: 600;
   }
-  .role.analyst { border-top: 3px solid var(--analyst); }
-  .role.analyst .role-pill { background: var(--accent-bg); color: var(--analyst); }
-  .role.compliance { border-top: 3px solid var(--compliance); }
-  .role.compliance .role-pill { background: #f4ead8; color: var(--compliance); }
-  .role.counter { border-top: 3px solid var(--counterparty); }
-  .role.counter .role-pill { background: #ececef; color: var(--counterparty); }
-  .role p { margin: 0; font-size: 14.5px; color: var(--ink-2); }
-  .role .sees, .role .hides {
+  .role.analyst .role-pill { background: var(--analyst-bg); color: var(--analyst); }
+  .role.compliance .role-pill { background: var(--compliance-bg); color: var(--compliance); }
+  .role.counter .role-pill { background: var(--counterparty-bg); color: var(--counterparty); }
+
+  .role-summary {
+    margin: 0;
+    font-size: 14.5px;
+    color: var(--ink-2);
+    line-height: 1.5;
+  }
+  .role-fact {
     display: block;
-    margin-top: 8px;
-    font-size: 13.5px;
-    color: var(--ink-3);
-  }
-  .role .sees::before { content: "Sees: "; color: var(--ink); font-weight: 600; }
-  .role .hides::before { content: "Doesn't: "; color: var(--ink); font-weight: 600; }
-
-  /* useful-where block */
-  .useful {
-    background: var(--card);
-    border: 1px solid var(--rule-hair);
-    border-radius: 3px;
-    padding: 22px 26px;
-    margin: 14px 0 8px;
-  }
-  .useful h3 { margin-top: 0; }
-  .useful ul { margin: 0; padding-left: 18px; }
-  .useful li { margin-bottom: 8px; font-size: 15.5px; color: var(--ink-2); line-height: 1.55; }
-
-  /* small list */
-  ul.clean { margin: 8px 0 16px; padding-left: 18px; }
-  ul.clean li { margin-bottom: 6px; color: var(--ink-2); }
-
-  /* footnote / disclaimer */
-  .disclaimer {
-    margin-top: 64px;
-    padding: 18px 22px;
-    background: var(--paper-soft);
-    border: 1px solid var(--rule-hair);
-    border-radius: 3px;
+    margin-top: 10px;
     font-size: 13.5px;
     color: var(--ink-3);
     line-height: 1.55;
   }
-  .disclaimer strong { color: var(--ink-2); }
+  .role-fact::before {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .role-fact.sees::before { content: "Sees: "; }
+  .role-fact.hides::before { content: "Doesn't: "; }
 
-  .signoff {
-    margin-top: 48px;
-    padding-top: 28px;
-    border-top: 1px solid var(--rule-soft);
+  @media (max-width: 760px) {
+    .roles { grid-template-columns: 1fr; }
+  }
+
+  /* -------------------- USEFUL CARD -------------------- */
+  .useful {
+    background: var(--paper-card);
+    border: 1px solid var(--rule-hair);
+    border-top: 2px solid var(--analyst);
+    border-radius: 4px;
+    padding: 24px 28px;
+    margin: 18px 0 0;
+    box-shadow: var(--shadow-sm);
+  }
+  .useful h3 { margin-top: 0; }
+  .useful ul { margin: 12px 0 0; padding-left: 20px; }
+  .useful li {
+    margin-bottom: 10px;
     font-size: 15px;
     color: var(--ink-2);
+    line-height: 1.55;
   }
-  .signoff .from {
-    margin-top: 12px;
-    font-size: 13px;
+
+  /* -------------------- KEPT-SMALL GRID -------------------- */
+  .kept-small {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 18px 0 18px;
+  }
+  .kept-small-item {
+    padding: 14px 18px;
+    border: 1px solid var(--rule-hair);
+    border-radius: 4px;
+    background: var(--paper-warm);
+    font-size: 14.5px;
+    color: var(--ink-2);
+    line-height: 1.55;
+  }
+  .kept-small-item strong {
+    display: block;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10.5px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--ink-4);
-    font-family: "JetBrains Mono", monospace;
+    color: var(--ink-3);
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  @media (max-width: 720px) {
+    .kept-small { grid-template-columns: 1fr; }
   }
 
+  /* -------------------- SIGNOFF + DISCLAIMER -------------------- */
+  .signoff {
+    margin-top: 56px;
+    padding-top: 28px;
+    border-top: 1px solid var(--rule-soft);
+    font-size: 15.5px;
+    color: var(--ink-2);
+  }
+  .signoff .name { font-weight: 600; color: var(--ink); }
+  .signoff .from {
+    margin-top: 10px;
+    font-size: 11.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-4);
+  }
   .links {
     display: flex;
-    gap: 20px;
+    gap: 22px;
     flex-wrap: wrap;
-    margin: 10px 0 0;
-    font-size: 13.5px;
+    margin: 14px 0 0;
+    font-size: 13px;
   }
-  .links a { font-family: "JetBrains Mono", monospace; letter-spacing: 0.06em; }
+  .links a {
+    font-family: "JetBrains Mono", monospace;
+    letter-spacing: 0.04em;
+  }
 
-  /* top-of-page actions */
-  .actions {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin: 0 0 44px;
-  }
-  .actions a.action {
-    display: block;
-    background: var(--card);
+  .disclaimer {
+    margin-top: 36px;
+    padding: 18px 22px;
+    background: var(--paper-deep);
     border: 1px solid var(--rule-hair);
-    border-left: 3px solid var(--accent);
-    border-radius: 3px;
-    padding: 14px 16px;
-    color: var(--ink);
-    text-decoration: none;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
-  }
-  .actions a.action:hover,
-  .actions a.action:focus-visible {
-    border-color: var(--accent);
-    box-shadow: 0 1px 0 var(--rule-hair), 0 4px 16px rgba(15, 18, 22, 0.07);
-    transform: translateY(-1px);
-    outline: none;
-  }
-  .action-label {
-    display: block;
-    font: 600 15px/1.3 "Source Serif 4", Georgia, serif;
-    color: var(--ink);
-  }
-  .action-sub {
-    display: block;
-    margin-top: 4px;
-    font-family: "JetBrains Mono", "IBM Plex Mono", monospace;
-    font-size: 11px;
-    letter-spacing: 0.06em;
+    border-radius: 4px;
+    font-size: 13px;
     color: var(--ink-3);
+    line-height: 1.55;
+  }
+  .disclaimer strong { color: var(--ink-2); font-weight: 600; }
+
+  /* -------------------- SECTION NUMBER -------------------- */
+  .section-num {
+    color: var(--ink-4);
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    font-weight: 500;
+    margin-right: 12px;
+    vertical-align: 4px;
+    text-transform: uppercase;
   }
 
-  /* responsive */
+  /* -------------------- RESPONSIVE -------------------- */
   @media (max-width: 720px) {
-    main { padding: 36px 18px 64px; }
-    h1 { font-size: 1.85rem; }
-    .roles { grid-template-columns: 1fr; }
-    .actions { grid-template-columns: 1fr; }
+    main.content { padding: 40px 1rem 64px; }
+    h2 { font-size: 1.35rem; }
     figcaption { grid-template-columns: 1fr; gap: 4px; }
     .caption-num { padding-top: 0; }
+    .frame { padding: 8px; }
+    .frame::before { left: 10px; top: 5px; }
   }
 </style>
 </head>
 <body>
-<main>
 
-  <!-- nameplate -->
-  <div class="nameplate">
-    <span class="left">Abdallah Safi &middot; Walkthrough</span>
-    <span class="right">Riipen application artifact &middot; May 2026</span>
-  </div>
-
-  <!-- headline -->
-  <div class="kicker">A demo for Acephalt</div>
-  <h1>A small diligence room, read three different ways, <em>so the trust boundary stops living in spreadsheets.</em></h1>
-
-  <p class="deck">
-    I built a small prototype of one corner of a deal room and shipped it. This
-    page is a short walk through what it is and the decisions behind it &mdash;
-    about four minutes if you read straight through.
-  </p>
-
-  <div class="lede">
-    <p>Hi Nicolas,</p>
-    <p>
-      I saw the Riipen posting and spent a weekend building something I could
-      point at instead of describe. What follows is a short tour, and a note on
-      where I think I&rsquo;d be useful.
-    </p>
-    <p>
-      Everything below is invented &mdash; no internal Acephalt material was used.
-      I just wanted to make the conversation more concrete than a resume.
-    </p>
-  </div>
-
-  <!-- quick actions -->
-  <nav class="actions" aria-label="Quick links">
-    <a class="action" href="/" target="_blank" rel="noreferrer">
-      <span class="action-label">Open the live room</span>
-      <span class="action-sub">riipen-acephalt.vercel.app</span>
-    </a>
-    <a class="action" href="/memo" target="_blank" rel="noreferrer">
-      <span class="action-label">Read the memo</span>
-      <span class="action-sub">/memo &middot; role-aware view</span>
-    </a>
-    <a class="action" href="https://github.com/PohTeyToe/riipen-acephalt" target="_blank" rel="noreferrer">
-      <span class="action-label">Source on GitHub</span>
-      <span class="action-sub">PohTeyToe/riipen-acephalt</span>
-    </a>
+<!-- =================== COVER =================== -->
+<header class="cover">
+  <nav class="topbar" aria-label="Walkthrough surfaces">
+    <span class="topbar-mark">
+      <span class="topbar-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      Abdallah Safi <span class="topbar-note">/ employer walkthrough</span>
+    </span>
+    <span class="topbar-links">
+      <a class="is-live" href="https://riipen-acephalt.vercel.app" target="_blank" rel="noreferrer">Live room</a>
+      <a href="/memo" target="_blank" rel="noreferrer">Memo</a>
+      <a href="https://github.com/PohTeyToe/riipen-acephalt" target="_blank" rel="noreferrer">Source</a>
+    </span>
   </nav>
+  <div class="cover-inner">
+    <div>
+      <div class="nameplate">
+        <span class="left">Project Cedar &middot; role-aware diligence room</span>
+        <span class="right">Riipen application artifact &middot; May 2026</span>
+      </div>
+      <p class="hero-meta"><strong>A demo for Acephalt</strong><span class="rule" aria-hidden="true"></span><span>four minute read</span></p>
+      <h1>A small diligence room, read three different ways, <em>so the trust boundary stops living in spreadsheets.</em></h1>
+      <p class="cover-deck">
+        I built a small prototype of one corner of a deal room and shipped it. This page is a short walk through what it is and the decisions behind it. About four minutes if you read straight through.
+      </p>
+      <p class="hero-note">
+        <strong>For Nicolas.</strong> I saw the Riipen posting and wanted something I could point at instead of describe. Everything below is invented, and no internal Acephalt material was used.
+      </p>
+      <div class="hero-actions">
+        <a class="hero-primary" href="https://riipen-acephalt.vercel.app" target="_blank" rel="noreferrer">Open the live room <span class="arrow" aria-hidden="true">&rarr;</span></a>
+        <a class="hero-secondary" href="/memo" target="_blank" rel="noreferrer">Read the memo <span>/memo</span></a>
+        <a class="hero-secondary" href="https://github.com/PohTeyToe/riipen-acephalt" target="_blank" rel="noreferrer">Source on GitHub <span>PohTeyToe/riipen-acephalt</span></a>
+      </div>
+      <div class="cover-sign">
+        <div class="cover-sign-avatar">A</div>
+        <div class="cover-sign-text">
+          <strong>Abdallah Safi</strong>
+          For Acephalt &middot; Toronto, May 2026
+        </div>
+      </div>
+    </div>
+    <div class="cover-aside" aria-hidden="true">
+      <div class="preview-stack">
+        <div class="preview-card preview-1">
+          <div class="preview-card-chrome"><i></i><i></i><i></i><span>riipen-acephalt.vercel.app</span></div>
+          <img src="/brief/home.png" alt="" />
+        </div>
+        <div class="preview-card preview-2">
+          <div class="preview-card-chrome"><i></i><i></i><i></i><span>/document/side-letter</span></div>
+          <img src="/brief/document.png" alt="" />
+        </div>
+        <span class="preview-live">Live prototype</span>
+        <span class="preview-chip is-room">Room view</span>
+        <span class="preview-chip is-doc">Compliance view</span>
+      </div>
+    </div>
+  </div>
+</header>
 
-  <hr class="rule" />
+<!-- =================== SCOPE STRIP =================== -->
+<section class="scope-strip" aria-label="Scope at a glance">
+  <div class="scope-strip-inner">
+    <div class="scope-tile">
+      <span class="scope-k">Roles</span>
+      <span class="scope-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="scope-v"><em>3</em><small>roles</small></span>
+      <div class="scope-sub">analyst, compliance, counterparty</div>
+    </div>
+    <div class="scope-tile">
+      <span class="scope-k">Surfaces</span>
+      <span class="scope-v"><em>2</em><small>screens</small></span>
+      <div class="scope-sub">room index and document detail</div>
+    </div>
+    <div class="scope-tile">
+      <span class="scope-k">Policy shape</span>
+      <span class="scope-v"><em>1</em><small>core rule path</small></span>
+      <div class="scope-sub">the same logic drives the badges, fields, and memo</div>
+    </div>
+    <div class="scope-tile">
+      <span class="scope-k">Not in scope</span>
+      <span class="scope-v"><em>0</em><small>LLMs</small></span>
+      <div class="scope-sub">no backend, no auth, no generated text</div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== CONTENT =================== -->
+<main class="content">
+
+  <!-- LETTER -->
+  <section class="section" style="margin-bottom: 56px;">
+    <div class="lede">
+      <p class="salutation">Hi Nicolas,</p>
+      <p>
+        I saw the Riipen posting and spent a weekend building something I could point at instead of describe. What follows is a short tour, and a note on where I think I&rsquo;d be useful.
+      </p>
+      <p>
+        Everything below is invented. No internal Acephalt material was used. I just wanted to make the conversation more concrete than a resume.
+      </p>
+    </div>
+  </section>
 
   <!-- 1. WHY -->
-  <h2><span class="num">01</span> Why this problem caught my attention</h2>
-  <p>
-    Acephalt&rsquo;s public framing points at the workflow around investment
-    decisions. The piece that kept pulling on me was the people layer: a single
-    diligence room gets opened by an analyst, a compliance reviewer, and an external
-    counterparty in the same week. Each one has a legitimate, different idea of what
-    they should be allowed to see.
-  </p>
-  <p>
-    In practice that gets handled by either splitting one document into three different
-    files, or by keeping sensitive material out of the room entirely and emailing it
-    around. Both feel like the kind of friction a platform eventually has to absorb.
-    I wanted to see what it would look like if a room understood roles natively.
-  </p>
+  <section class="section">
+    <p class="eyebrow"><span class="section-num">01</span> Why this caught my attention</p>
+    <h2>One room. Three readers who all think they have legitimate access.</h2>
+    <p class="section-lead">
+      Acephalt&rsquo;s public framing points at the workflow around investment decisions. The piece that kept pulling on me was the people layer: a single diligence room gets opened by an analyst, a compliance reviewer, and an external counterparty in the same week. Each one has a legitimate, different idea of what they should be allowed to see.
+    </p>
+    <p style="margin-top: 14px;">
+      In practice that gets handled by either splitting one document into three different files, or by keeping sensitive material out of the room entirely and emailing it around. Both feel like the kind of friction a platform eventually has to absorb. I wanted to see what it would look like if a room understood roles natively.
+    </p>
+  </section>
 
   <!-- 2. PROBLEM -->
-  <h2><span class="num">02</span> The problem in one paragraph</h2>
-  <p>
-    A diligence room today is mostly view-only or full-access. That makes the people
-    running the deal pick between oversharing or splitting one artifact into three
-    copies for three audiences. The decision about <em>who sees what</em> ends up
-    living in someone&rsquo;s head, or in a checklist, or in a series of folder
-    permissions that nobody can audit later. The prototype asks a smaller question:
-    what if that decision lived in one place, at the level of individual fields, and
-    the room rendered itself accordingly?
-  </p>
+  <section class="section">
+    <p class="eyebrow"><span class="section-num">02</span> The problem in one paragraph</p>
+    <h2>The decision about <em>who sees what</em> is doing real work, but it isn&rsquo;t living anywhere.</h2>
+    <p class="section-lead">
+      A diligence room today is mostly view-only or full-access. That makes the people running the deal pick between oversharing or splitting one artifact into three copies for three audiences. The decision about who sees what ends up living in someone&rsquo;s head, or in a checklist, or in a series of folder permissions that nobody can audit later. The prototype asks a smaller question: what if that decision lived in one place, at the level of individual fields, and the room rendered itself accordingly?
+    </p>
+  </section>
 
   <!-- 3. WALKTHROUGH -->
-  <h2><span class="num">03</span> A short tour of the demo</h2>
-  <p>
-    The live site is at
-    <a href="https://riipen-acephalt.vercel.app" target="_blank" rel="noreferrer">riipen-acephalt.vercel.app</a>.
-    There are three things to see. I will narrate each one.
-  </p>
+  <section class="section">
+    <p class="eyebrow"><span class="section-num">03</span> A short tour of the demo</p>
+    <h2>Three surfaces, one policy.</h2>
+    <p class="section-lead">
+      The live site is at <a href="https://riipen-acephalt.vercel.app" target="_blank" rel="noreferrer">riipen-acephalt.vercel.app</a>. There are three things to see. I&rsquo;ll narrate each one.
+    </p>
 
-  <h3>The room</h3>
-  <figure>
-    <div class="frame">
-      <img src="/brief/home.png" alt="Project Cedar diligence room: header with deal facts, role hotspots, and a table of nine documents with redaction badges." />
-    </div>
-    <figcaption>
-      <span class="caption-num">01 &middot; The room</span>
-      <span class="caption-body">
-        <strong>What you are looking at.</strong> A fictional senior secured term loan called
-        Project Cedar. The role selector in the top right is the only control on the page.
-        Toggling it re-renders every count, every badge, and every preview line below it.
-      </span>
-    </figcaption>
-    <ul class="annotations">
-      <li><span class="pin">1</span><span><strong>Role selector.</strong> The same room read three different ways. Try Compliance Reviewer to see what full access looks like, and External Counterparty to see how much falls away.</span></li>
-      <li><span class="pin">2</span><span><strong>Hotspots row.</strong> The three documents with the most redaction friction for the current role. This is where the policy is most visibly doing work.</span></li>
-      <li><span class="pin">3</span><span><strong>Document table.</strong> Each row shows the first redaction reason directly under the file name. The reviewer can read the trust boundary without opening anything.</span></li>
-    </ul>
-  </figure>
+    <h3>The room</h3>
+    <figure>
+      <div class="frame">
+        <img src="/brief/home.png" alt="Project Cedar diligence room: header with deal facts, role hotspots, and a table of nine documents with redaction badges." />
+      </div>
+      <figcaption>
+        <span class="caption-num">01 &middot; The room</span>
+        <span class="caption-body">
+          <strong>What you are looking at.</strong> A fictional senior secured term loan called Project Cedar. The role selector in the top right is the only control on the page. Toggling it re-renders every count, every badge, and every preview line below it.
+        </span>
+      </figcaption>
+      <ul class="annotations">
+        <li><span class="pin">1</span><span><strong>Role selector.</strong> The same room read three different ways. Try Compliance Reviewer to see what full access looks like, and External Counterparty to see how much falls away.</span></li>
+        <li><span class="pin">2</span><span><strong>Hotspots row.</strong> The three documents with the most redaction friction for the current role. This is where the policy is most visibly doing work.</span></li>
+        <li><span class="pin">3</span><span><strong>Document table.</strong> Each row shows the first redaction reason directly under the file name. The reviewer can read the trust boundary without opening anything.</span></li>
+      </ul>
+    </figure>
 
-  <h3>A document, read through three lenses</h3>
-  <figure>
-    <div class="frame">
-      <img src="/brief/document.png" alt="Side letter detail page showing the active redaction reason, a three-role comparison strip, and a seeded access log." />
-    </div>
-    <figcaption>
-      <span class="caption-num">02 &middot; The document</span>
-      <span class="caption-body">
-        <strong>What changed at this level.</strong> Same document, three lenses at the top of
-        the page. The reviewer sees what the analyst sees, what compliance sees, and what the
-        counterparty sees, without toggling roles. The point is to make the trust boundary
-        legible at a glance.
-      </span>
-    </figcaption>
-    <ul class="annotations">
-      <li><span class="pin">1</span><span><strong>Three-role strip.</strong> Field counts visible to each role on this single artifact. The same file can be a public summary for one party and a privileged annex for another.</span></li>
-      <li><span class="pin">2</span><span><strong>Most-redacted clause.</strong> The page surfaces the highest-friction passage for the active role, with the redaction reason inline.</span></li>
-      <li><span class="pin">3</span><span><strong>Seeded access log.</strong> A prototype shape for what a real append-only audit layer would expose. Not a real log. A picture of one.</span></li>
-    </ul>
-  </figure>
+    <h3>A document, read through three lenses</h3>
+    <figure>
+      <div class="frame">
+        <img src="/brief/document.png" alt="Side letter detail page showing the active redaction reason, a three-role comparison strip, and a seeded access log." />
+      </div>
+      <figcaption>
+        <span class="caption-num">02 &middot; The document</span>
+        <span class="caption-body">
+          <strong>What changed at this level.</strong> Same document, three lenses at the top of the page. The reviewer sees what the analyst sees, what compliance sees, and what the counterparty sees, without toggling roles. The point is to make the trust boundary legible at a glance.
+        </span>
+      </figcaption>
+      <ul class="annotations">
+        <li><span class="pin">1</span><span><strong>Three-role strip.</strong> Field counts visible to each role on this single artifact. The same file can be a public summary for one party and a privileged annex for another.</span></li>
+        <li><span class="pin">2</span><span><strong>Most-redacted clause.</strong> The page surfaces the highest-friction passage for the active role, with the redaction reason inline.</span></li>
+        <li><span class="pin">3</span><span><strong>Seeded access log.</strong> A prototype shape for what a real append-only audit layer would expose. Not a real log. A picture of one.</span></li>
+      </ul>
+    </figure>
 
-  <h3>A memo that points back at the room</h3>
-  <figure>
-    <div class="frame">
-      <img src="/brief/memo.png" alt="Memo draft view showing claim cards, each linked to the source documents and visible fields that support it." />
-    </div>
-    <figcaption>
-      <span class="caption-num">03 &middot; The memo</span>
-      <span class="caption-body">
-        <strong>The consequence.</strong> A short investment memo drafted from the same room.
-        Every claim card is bound to the documents and fields that support it. Change the
-        viewer&rsquo;s role and the memo re-renders honestly: claims that can no longer be
-        sourced lose their evidence and call themselves out.
-      </span>
-    </figcaption>
-    <ul class="annotations">
-      <li><span class="pin">1</span><span><strong>Claim cards.</strong> Each one carries the source documents, the supporting fields, and a verdict (keep, revisit, escalate).</span></li>
-      <li><span class="pin">2</span><span><strong>Role-aware sourcing.</strong> A claim that lost its evidence under the current role says so plainly, instead of quietly inheriting yesterday&rsquo;s confidence.</span></li>
-      <li><span class="pin">3</span><span><strong>Why this exists.</strong> The memo is the secondary artifact. It is here to show that the field-level policy has downstream consequences worth caring about, not just badges in a table.</span></li>
-    </ul>
-  </figure>
+    <h3>A memo that points back at the room</h3>
+    <figure>
+      <div class="frame">
+        <img src="/brief/memo.png" alt="Memo draft view showing claim cards, each linked to the source documents and visible fields that support it." />
+      </div>
+      <figcaption>
+        <span class="caption-num">03 &middot; The memo</span>
+        <span class="caption-body">
+          <strong>The consequence.</strong> A short investment memo drafted from the same room. Every claim card is bound to the documents and fields that support it. Change the viewer&rsquo;s role and the memo re-renders honestly: claims that can no longer be sourced lose their evidence and call themselves out.
+        </span>
+      </figcaption>
+      <ul class="annotations">
+        <li><span class="pin">1</span><span><strong>Claim cards.</strong> Each one carries the source documents, the supporting fields, and a verdict (keep, revisit, escalate).</span></li>
+        <li><span class="pin">2</span><span><strong>Role-aware sourcing.</strong> A claim that lost its evidence under the current role says so plainly, instead of quietly inheriting yesterday&rsquo;s confidence.</span></li>
+        <li><span class="pin">3</span><span><strong>Why this exists.</strong> The memo is the secondary artifact. It is here to show that the field-level policy has downstream consequences worth caring about, not just badges in a table.</span></li>
+      </ul>
+    </figure>
 
-  <p>
-    The memo is reachable directly at
-    <a href="/memo">/memo</a> if you want to skip past the room view.
-  </p>
+    <p style="margin-top: 16px;">
+      The memo is reachable directly at <a href="/memo">/memo</a> if you want to skip past the room view.
+    </p>
+  </section>
 
   <!-- 4. ROLES -->
-  <h2><span class="num">04</span> What changes when the role changes</h2>
-  <p>
-    Three roles, not five. Three is what the diligence pattern actually carries:
-    one party doing the underwriting, one party gatekeeping risk, one party with
-    bilateral information rights. Adding more dilutes the argument.
-  </p>
+  <section class="section">
+    <p class="eyebrow"><span class="section-num">04</span> What changes when the role changes</p>
+    <h2>Three roles, not five.</h2>
+    <p class="section-lead">
+      Three is what the diligence pattern actually carries: one party doing the underwriting, one party gatekeeping risk, one party with bilateral information rights. Adding more dilutes the argument.
+    </p>
 
-  <div class="roles">
-    <div class="role analyst">
-      <span class="role-pill">Investor Analyst</span>
-      <p>Underwrites the borrower. Reads to build a credit case.</p>
-      <span class="sees">deal terms, covenants, financials, audit reports, KYC summary</span>
-      <span class="hides">beneficial-ownership detail, source-of-funds attestations, counsel-to-counsel correspondence</span>
+    <div class="matrix-shell">
+      <div class="matrix-head">
+        <p>The shortest honest version of the product argument is this matrix. The same documents stay in one room, but the visible surface changes by role.</p>
+        <div class="matrix-legend" aria-label="Visibility legend">
+          <span><i class="matrix-key full" aria-hidden="true"></i> full</span>
+          <span><i class="matrix-key partial" aria-hidden="true"></i> partial</span>
+          <span><i class="matrix-key hidden" aria-hidden="true"></i> hidden</span>
+        </div>
+      </div>
+      <table class="matrix-table" aria-label="Document visibility by role">
+        <thead>
+          <tr>
+            <th>Document</th>
+            <th class="role-col analyst"><span><i aria-hidden="true"></i>Investor Analyst</span></th>
+            <th class="role-col compliance"><span><i aria-hidden="true"></i>Compliance Reviewer</span></th>
+            <th class="role-col counterparty"><span><i aria-hidden="true"></i>External Counterparty</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="matrix-doc">Term Sheet <small>Project Cedar</small></td>
+            <td><span class="matrix-state full">Full</span></td>
+            <td><span class="matrix-state full">Full</span></td>
+            <td><span class="matrix-state partial">Partial</span></td>
+          </tr>
+          <tr>
+            <td class="matrix-doc">Borrower Pitch Deck <small>Larkspur Software</small></td>
+            <td><span class="matrix-state full">Full</span></td>
+            <td><span class="matrix-state full">Full</span></td>
+            <td><span class="matrix-state hidden">Hidden</span></td>
+          </tr>
+          <tr>
+            <td class="matrix-doc">Borrower Financials <small>3-year audited</small></td>
+            <td><span class="matrix-state full">Full</span></td>
+            <td><span class="matrix-state full">Full</span></td>
+            <td><span class="matrix-state hidden">Hidden</span></td>
+          </tr>
+          <tr>
+            <td class="matrix-doc">Side Letter <small>Anchor Co-Lender</small></td>
+            <td><span class="matrix-state partial">Partial</span></td>
+            <td><span class="matrix-state full">Full</span></td>
+            <td><span class="matrix-state partial">Partial</span></td>
+          </tr>
+          <tr>
+            <td class="matrix-doc">KYC / AML Pack <small>Beneficial Owners</small></td>
+            <td><span class="matrix-state partial">Partial</span></td>
+            <td><span class="matrix-state full">Full</span></td>
+            <td><span class="matrix-state hidden">Hidden</span></td>
+          </tr>
+          <tr>
+            <td class="matrix-doc">Legal Opinion <small>Borrower Counsel</small></td>
+            <td><span class="matrix-state partial">Partial</span></td>
+            <td><span class="matrix-state full">Full</span></td>
+            <td><span class="matrix-state hidden">Hidden</span></td>
+          </tr>
+          <tr>
+            <td class="matrix-doc">Auditor Report <small>FY2025</small></td>
+            <td><span class="matrix-state full">Full</span></td>
+            <td><span class="matrix-state full">Full</span></td>
+            <td><span class="matrix-state partial">Partial</span></td>
+          </tr>
+          <tr>
+            <td class="matrix-doc">Mutual NDA <small>Counterparty Engagement</small></td>
+            <td><span class="matrix-state full">Full</span></td>
+            <td><span class="matrix-state full">Full</span></td>
+            <td><span class="matrix-state full">Full</span></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <div class="role compliance">
-      <span class="role-pill">Compliance Reviewer</span>
-      <p>Gatekeeps risk. Reads to clear or block the deal.</p>
-      <span class="sees">everything in the room</span>
-      <span class="hides">nothing, but every page renders with an audit watermark</span>
+
+    <div class="roles">
+      <div class="role analyst">
+        <span class="role-pill">Investor Analyst</span>
+        <p class="role-summary">Underwrites the borrower. Reads to build a credit case.</p>
+        <span class="role-fact sees">deal terms, covenants, financials, audit reports, KYC summary</span>
+        <span class="role-fact hides">beneficial-ownership detail, source-of-funds attestations, counsel-to-counsel correspondence</span>
+      </div>
+      <div class="role compliance">
+        <span class="role-pill">Compliance Reviewer</span>
+        <p class="role-summary">Gatekeeps risk. Reads to clear or block the deal.</p>
+        <span class="role-fact sees">everything in the room</span>
+        <span class="role-fact hides">nothing, but every page renders with an audit watermark</span>
+      </div>
+      <div class="role counter">
+        <span class="role-pill">External Counterparty</span>
+        <p class="role-summary">Co-lender, borrower-side counsel, or rating agency. Reads only what is bilateral to them.</p>
+        <span class="role-fact sees">top-level deal terms, MNDA terms, public auditor opinion, clauses tied to their party</span>
+        <span class="role-fact hides">operating metrics, growth plan, KYC pack, side letters that are not theirs</span>
+      </div>
     </div>
-    <div class="role counter">
-      <span class="role-pill">External Counterparty</span>
-      <p>Co-lender, borrower-side counsel, or rating agency. Reads only what is bilateral to them.</p>
-      <span class="sees">top-level deal terms, MNDA terms, public auditor opinion, clauses tied to their party</span>
-      <span class="hides">operating metrics, growth plan, KYC pack, side letters that are not theirs</span>
+  </section>
+
+  <!-- 5. WHY IT MATTERS -->
+  <section class="section">
+    <p class="eyebrow"><span class="section-num">05</span> Why this matters and where I&rsquo;d be useful</p>
+    <h2>Field-level policy is the smallest believable surface where this becomes <em>visible</em>.</h2>
+    <p class="section-lead">
+      The wider claim under the prototype is small but real. If a platform owns the diligence workflow, the trust boundary inside the room eventually becomes part of the product. Field-level policy is one of the smallest believable surfaces where that becomes visible to a user.
+    </p>
+
+    <div class="useful">
+      <h3>Where I would be useful on the team</h3>
+      <ul>
+        <li>Turning fuzzy product framing into the smallest believable artifact, and shipping it. This page and the demo are the example.</li>
+        <li>Front-end work that takes a non-trivial data model seriously. The redaction engine here is one pure function and the UI is a strict consumer of it.</li>
+        <li>Writing the explanation alongside the build. The memo route, the captions on this page, and the document audit log are all the same instinct.</li>
+        <li>Working in the space between design, product, and engineering. I do not need a handoff to make a screen real.</li>
+      </ul>
     </div>
-  </div>
+  </section>
 
-  <!-- 5. WHY IT MATTERS / WHERE I AM USEFUL -->
-  <h2><span class="num">05</span> Why this matters and where I would be useful</h2>
-  <p>
-    The wider claim under the prototype is small but real. If a platform owns the
-    diligence workflow, the trust boundary inside the room eventually becomes part
-    of the product. Field-level policy is one of the smallest believable surfaces
-    where that becomes visible to a user.
-  </p>
+  <!-- 6. KEPT SMALL -->
+  <section class="section">
+    <p class="eyebrow"><span class="section-num">06</span> What I intentionally kept small</p>
+    <h2>Two screens, sample JSON, no backend. I held the line.</h2>
+    <p class="section-lead">
+      A prototype only earns its keep if it tells the truth about its own boundaries. These are the cuts I made on purpose.
+    </p>
 
-  <div class="useful">
-    <h3>Where I would be useful on the team</h3>
-    <ul>
-      <li>Turning fuzzy product framing into the smallest believable artifact, and shipping it. This page and the demo are the example.</li>
-      <li>Front-end work that takes a non-trivial data model seriously. The redaction engine here is one pure function and the UI is a strict consumer of it.</li>
-      <li>Writing the explanation alongside the build. The memo route, the captions on this page, and the document audit log are all the same instinct.</li>
-      <li>Working in the space between design, product, and engineering. I do not need a handoff to make a screen real.</li>
-    </ul>
-  </div>
+    <div class="kept-small">
+      <div class="kept-small-item">
+        <strong>No LLM call</strong>
+        The memo is hand-authored claim cards bound to the field policy, not generated text.
+      </div>
+      <div class="kept-small-item">
+        <strong>No real auth</strong>
+        The role switcher is a client-side selector that stands in for a server-enforced session role.
+      </div>
+      <div class="kept-small-item">
+        <strong>No flagging, no comments</strong>
+        No upload flow either. Those are different artifacts worth building separately.
+      </div>
+      <div class="kept-small-item">
+        <strong>No five-role taxonomy</strong>
+        No tenancy model. Three roles is enough to make the argument legible.
+      </div>
+    </div>
 
-  <!-- 6. WHAT I LEFT OUT -->
-  <h2><span class="num">06</span> What I intentionally kept small</h2>
-  <p>
-    The scope was two screens, sample JSON, and no backend. I held the line on that.
-  </p>
-  <ul class="clean">
-    <li>No LLM call. The memo is hand-authored claim cards bound to the field policy, not generated text.</li>
-    <li>No real auth. The role switcher is a client-side selector that stands in for a server-enforced session role.</li>
-    <li>No flagging, no commenting, no upload flow. Those are different artifacts.</li>
-    <li>No five-role taxonomy or tenancy model. Three roles is enough to make the argument legible.</li>
-  </ul>
-  <p>
-    A production version would push the same predicate down to the database layer.
-    Either a row-level security policy keyed on field and role, or a server-side filter
-    applied before any field set leaves the API. The prototype&rsquo;s job is to make
-    that future shape feel inevitable, not to be that future shape.
-  </p>
+    <p style="margin-top: 6px;">
+      A production version would push the same predicate down to the database layer. Either a row-level security policy keyed on field and role, or a server-side filter applied before any field set leaves the API. The prototype&rsquo;s job is to make that future shape feel inevitable, not to be that future shape.
+    </p>
+  </section>
 
   <!-- 7. CLOSING -->
-  <h2><span class="num">07</span> A short closing note</h2>
-  <p>
-    If any of this is useful, I would love to talk. If it lands wide of where you
-    are actually trying to take the product, I would also love to hear that. Either
-    is a better outcome than guessing from the outside.
-  </p>
-  <p>
-    Thank you for reading this far.
-  </p>
+  <section class="section">
+    <p class="eyebrow"><span class="section-num">07</span> A short closing note</p>
+    <h2>If this is useful, I&rsquo;d love to talk. If it&rsquo;s wide of the mark, I&rsquo;d love to hear that.</h2>
+    <p class="section-lead">
+      Either is a better outcome than guessing from the outside. Thank you for reading this far.
+    </p>
+  </section>
 
+  <!-- SIGNOFF -->
   <div class="signoff">
-    <div>Abdallah Safi</div>
+    <div class="name">Abdallah Safi</div>
     <div class="from">Toronto &middot; May 2026</div>
     <div class="links">
       <a href="https://riipen-acephalt.vercel.app" target="_blank" rel="noreferrer">riipen-acephalt.vercel.app</a>
       <a href="/">the room</a>
       <a href="/memo">the memo</a>
+      <a href="https://github.com/PohTeyToe/riipen-acephalt" target="_blank" rel="noreferrer">github source</a>
     </div>
   </div>
 
+  <!-- DISCLAIMER -->
   <div class="disclaimer">
-    <strong>Disclaimer.</strong> Project Cedar, Larkspur Software Holdings, Aldercrest Capital
-    Partners, Cascade Pension Trust, Northbank Credit Partners, and all other parties
-    and figures in the prototype are invented. The redaction taxonomy is an opinion
-    drawn from public diligence-workflow vocabulary, not a description of any internal
-    Acephalt product or schema. Nothing here is presented as affiliated work or as an
-    endorsement by Acephalt.
+    <strong>Disclaimer.</strong> Project Cedar, Larkspur Software Holdings, Aldercrest Capital Partners, Cascade Pension Trust, Northbank Credit Partners, and all other parties and figures in the prototype are invented. The redaction taxonomy is an opinion drawn from public diligence-workflow vocabulary, not a description of any internal Acephalt product or schema. Nothing here is presented as affiliated work or as an endorsement by Acephalt.
   </div>
 
 </main>
